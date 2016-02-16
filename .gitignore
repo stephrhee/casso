@@ -1,6 +1,7 @@
 # generated files
 bin/*
 gen/*
+out/*
 
 # local properties
 local.properties
