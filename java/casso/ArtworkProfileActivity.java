@@ -1,4 +1,4 @@
-package com.example.casso;
+package casso;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.casso.R;
 
 public class ArtworkProfileActivity extends FragmentActivity implements DownloadImageAsyncTask.Callback {
 

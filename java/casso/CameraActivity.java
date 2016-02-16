@@ -1,4 +1,4 @@
-package com.example.casso;
+package casso;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.casso.R;
 
 public class CameraActivity extends Activity {
 

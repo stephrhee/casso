@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.example.casso"
+          package="com.casso"
           android:versionCode="1"
           android:versionName="1.0">
     <uses-sdk
@@ -17,7 +17,7 @@
             android:icon="@drawable/ic_launcher"
             android:allowBackup="true">
         <activity
-                android:name="com.example.casso.SearchActivity"
+                android:name="casso.SearchActivity"
                 android:label="@string/search_activity_name"
                 android:screenOrientation="portrait">
             <intent-filter>
@@ -26,12 +26,12 @@
             </intent-filter>
         </activity>
         <activity
-                android:name="com.example.casso.ArtworkProfileActivity"
+                android:name="casso.ArtworkProfileActivity"
                 android:label="@string/artwork_profile_activity_name"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name="com.example.casso.CameraActivity"
+                android:name="casso.CameraActivity"
                 android:label="@string/camera_activity_name"
                 android:screenOrientation="portrait">
         </activity>

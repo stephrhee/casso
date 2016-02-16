@@ -2,6 +2,7 @@
 bin/*
 gen/*
 out/*
+target/*
 
 # local properties
 local.properties
