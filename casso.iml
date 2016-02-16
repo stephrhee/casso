@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="android" name="Android">
+      <configuration />
+    </facet>
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/res" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/res/drawable-hdpi" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/res/drawable-ldpi" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/res/drawable-mdpi" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/res/drawable-xhdpi" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/res/layout" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/res/values" type="java-resource" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/android-sdk-macosx/extras/android/support/v4/android-support-v4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+  </component>
+</module>
