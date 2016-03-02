@@ -5,33 +5,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/blue"
-        android:gravity="center"
-        android:padding="@dimen/search_layout_padding">
+        android:gravity="top|center_horizontal"
+        >
 
     <include
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             layout="@layout/search_box_edit_text"
-            android:id="@+id/search_artist_name_edit_text"
-            android:layout_marginBottom="@dimen/search_box_edit_text_padding"
+            android:id="@+id/search_artist_search_field"
             />
 
-    <include
+    <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            layout="@layout/search_box_edit_text"
-            android:id="@+id/search_piece_title_edit_text"
-            android:layout_marginBottom="@dimen/search_box_edit_text_padding"
-            />
-
-    <Button
-            android:layout_width="@dimen/search_button_width"
-            android:layout_height="wrap_content"
-            android:id="@+id/search_button"
-            android:text="@string/search_button_go"
-            android:background="@color/white"
-            android:textColor="@color/blue"
+            android:layout_height="1dp"
             android:padding="@dimen/search_box_edit_text_padding"
+            android:background="@color/gray"
+            />
+
+    <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/search_box_edit_text"
+            android:id="@+id/search_artwork_title_search_field"
+            android:layout_marginBottom="@dimen/search_box_edit_text_padding"
             />
 
 </LinearLayout>
