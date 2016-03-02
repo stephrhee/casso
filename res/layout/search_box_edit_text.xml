@@ -6,6 +6,10 @@
         android:background="@color/white"
         android:textColor="@color/blue"
         android:textColorHint="@color/gray"
-        android:padding="@dimen/search_box_edit_text_padding"
+        android:textSize="@dimen/search_field_font_size"
+        android:paddingLeft="@dimen/search_activity_left_right_padding"
+        android:paddingRight="@dimen/search_activity_left_right_padding"
+        android:paddingTop="@dimen/search_box_edit_top_bottom_padding"
+        android:paddingBottom="@dimen/search_box_edit_top_bottom_padding"
         android:singleLine="true"
         />

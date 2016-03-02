@@ -4,16 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 
 import android.widget.TextView;
 import com.casso.R;
-
-import java.security.KeyException;
 
 public class SearchActivity extends FragmentActivity {
 
@@ -36,16 +32,17 @@ public class SearchActivity extends FragmentActivity {
         mArtistNameSearchField.setHint(R.string.search_artist_name_question_string);
         mArtworkTitleSearchField.setHint(R.string.search_artwork_title_question_string);
         mArtworkTitleSearchField.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
-        mArtworkTitleSearchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    doSearch();
-                    return true;
-                }
-                return false;
-            }
-        });
+        mArtworkTitleSearchField.setOnEditorActionListener(
+                new TextView.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                            doSearch();
+                            return true;
+                        }
+                        return false;
+                    }
+                });
     }
 
     private void doSearch() {
