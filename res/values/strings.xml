@@ -5,8 +5,8 @@
     <string name="camera_activity_name">CameraActivity</string>
     <string name="search_activity_name">SearchActivity</string>
 
-    <string name="search_artist_name_question_string">What is the name of the artist?</string>
-    <string name="search_artwork_title_question_string">What is the title of the artwork?</string>
+    <string name="search_artist_question_string">Who is the artist?</string>
+    <string name="search_artwork_question_string">What is the artwork?</string>
     <string name="search_suggestions_string">Suggestions</string>
 
 </resources>

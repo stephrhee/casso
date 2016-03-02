@@ -24,7 +24,7 @@
             />
 
     <include
-            android:id="@+id/search_artwork_title_search_field"
+            android:id="@+id/search_artwork_search_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             layout="@layout/search_box_edit_text"

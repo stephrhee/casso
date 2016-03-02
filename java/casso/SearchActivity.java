@@ -21,8 +21,8 @@ import java.util.List;
 
 public class SearchActivity extends FragmentActivity {
 
-    private EditText mArtistNameSearchField;
-    private EditText mArtworkTitleSearchField;
+    private EditText mArtistSearchField;
+    private EditText mArtworkSearchField;
     private ListView mArtistSuggestionsListView;
     private ListView mArtworkSuggestionsListView;
 
@@ -39,39 +39,39 @@ public class SearchActivity extends FragmentActivity {
     }
 
     private void init() {
-        mArtistNameSearchField = (EditText) findViewById(R.id.search_artist_search_field);
-        mArtworkTitleSearchField = (EditText) findViewById(R.id.search_artwork_title_search_field);
+        mArtistSearchField = (EditText) findViewById(R.id.search_artist_search_field);
+        mArtworkSearchField = (EditText) findViewById(R.id.search_artwork_search_field);
         mArtistSuggestionsListView = (ListView) findViewById(R.id.search_artist_suggestions_list_view);
         mArtworkSuggestionsListView = (ListView) findViewById(R.id.search_artwork_suggestions_list_view);
 
-        mArtistNameSearchField.setHint(R.string.search_artist_name_question_string);
-        mArtworkTitleSearchField.setHint(R.string.search_artwork_title_question_string);
+        mArtistSearchField.setHint(R.string.search_artist_question_string);
+        mArtworkSearchField.setHint(R.string.search_artwork_question_string);
 
-        mArtistNameSearchField.addTextChangedListener(getTextWatcher(
-                mArtistNameSearchField,
+        mArtistSearchField.addTextChangedListener(getTextWatcher(
+                mArtistSearchField,
                 mArtistSuggestionsListView,
                 mArtistSuggestions));
-        mArtworkTitleSearchField.addTextChangedListener(getTextWatcher(
-                mArtworkTitleSearchField,
+        mArtworkSearchField.addTextChangedListener(getTextWatcher(
+                mArtworkSearchField,
                 mArtworkSuggestionsListView,
                 mArtworkSuggestions));
 
-        mArtistNameSearchField.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-        mArtworkTitleSearchField.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+        mArtistSearchField.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        mArtworkSearchField.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
 
-        mArtistNameSearchField.setOnEditorActionListener(
+        mArtistSearchField.setOnEditorActionListener(
                 new TextView.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                         if (actionId == EditorInfo.IME_ACTION_NEXT) {
                             hideSuggestions(mArtistSuggestionsListView);
-                            mArtworkTitleSearchField.requestFocus();
+                            mArtworkSearchField.requestFocus();
                             return true;
                         }
                         return false;
                     }
                 });
-        mArtworkTitleSearchField.setOnEditorActionListener(
+        mArtworkSearchField.setOnEditorActionListener(
                 new TextView.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -83,15 +83,15 @@ public class SearchActivity extends FragmentActivity {
                     }
                 });
 
-        mArtistNameSearchField.setOnFocusChangeListener(getOnFocusChangeListener(
+        mArtistSearchField.setOnFocusChangeListener(getOnFocusChangeListener(
                 mArtistSuggestionsListView,
                 mArtworkSuggestionsListView,
-                mArtistNameSearchField,
+                mArtistSearchField,
                 mArtistSuggestions));
-        mArtworkTitleSearchField.setOnFocusChangeListener(getOnFocusChangeListener(
+        mArtworkSearchField.setOnFocusChangeListener(getOnFocusChangeListener(
                 mArtworkSuggestionsListView,
                 mArtistSuggestionsListView,
-                mArtworkTitleSearchField,
+                mArtworkSearchField,
                 mArtworkSuggestions));
     }
 
