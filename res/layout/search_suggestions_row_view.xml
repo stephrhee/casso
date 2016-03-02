@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<EditText
+<TextView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         android:textColor="@color/blue"
-        android:textColorHint="@color/gray"
-        android:textSize="@dimen/search_field_font_size"
+        android:textSize="@dimen/search_suggestions_row_view_font_size"
         android:paddingLeft="@dimen/search_activity_left_right_padding"
         android:paddingRight="@dimen/search_activity_left_right_padding"
-        android:paddingTop="@dimen/search_field_top_bottom_padding"
-        android:paddingBottom="@dimen/search_field_top_bottom_padding"
+        android:paddingTop="@dimen/search_suggestions_row_view_top_bottom_padding"
+        android:paddingBottom="@dimen/search_suggestions_row_view_top_bottom_padding"
         android:singleLine="true"
         />

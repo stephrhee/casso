@@ -2,10 +2,15 @@
 <resources>
 
     <dimen name="search_activity_left_right_padding">12dp</dimen>
-    <dimen name="search_box_edit_top_bottom_padding">12dp</dimen>
-    <dimen name="search_suggestions_top_bottom_padding">7dp</dimen>
+
+    <dimen name="search_field_top_bottom_padding">12dp</dimen>
     <dimen name="search_field_font_size">15sp</dimen>
+
+    <dimen name="search_suggestions_top_bottom_padding">7dp</dimen>
     <dimen name="search_suggestions_font_size">12sp</dimen>
+
+    <dimen name="search_suggestions_row_view_font_size">@dimen/search_field_font_size</dimen>
+    <dimen name="search_suggestions_row_view_top_bottom_padding">@dimen/search_field_top_bottom_padding</dimen>
 
     <dimen name="search_box_edit_text_padding">10dp</dimen>
 
