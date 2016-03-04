@@ -5,13 +5,18 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.casso.R;
 
-public class ArtworkProfileActivity extends FragmentActivity implements DownloadImageAsyncTask.Callback {
+import java.util.List;
+
+public class ArtworkProfileActivity extends FragmentActivity implements
+        DownloadImageAsyncTask.Callback,
+        FirebaseRequestHandler.Callback {
+
+    private FirebaseRequestHandler mFirebaseRequestHandler;
 
     private ImageView mImage;
     private TextView mTitle;
@@ -26,9 +31,15 @@ public class ArtworkProfileActivity extends FragmentActivity implements Download
         setContentView(R.layout.artwork_profile_layout);
 
         init();
+        mFirebaseRequestHandler.getObjectIdsList();
     }
 
     private void init() {
+        mFirebaseRequestHandler = new FirebaseRequestHandler(
+                this,
+                FirebaseRequestHandler.DATA_URL,
+                this);
+
         mImage = (ImageView) findViewById(R.id.artwork_profile_image);
         mTitle = (TextView) findViewById(R.id.artwork_profile_title);
         mArtist = (TextView) findViewById(R.id.artwork_profile_artist);
@@ -52,6 +63,14 @@ public class ArtworkProfileActivity extends FragmentActivity implements Download
         } else {
             Log.e("Error", "bitmap could not be fetched");
         }
+    }
+
+    @Override
+    public void onObjectIdsFetched(List<Integer> objectIdsList) {
+    }
+
+    @Override
+    public void onObjectIdsFetchFailed() {
     }
 
 }
