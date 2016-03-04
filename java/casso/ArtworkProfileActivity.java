@@ -9,15 +9,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import casso.http.FirebaseRequestHandler;
+import casso.http.YCBARequestHandler;
+
 import com.casso.R;
 
 import java.util.List;
 
 public class ArtworkProfileActivity extends FragmentActivity implements
         DownloadImageAsyncTask.Callback,
-        FirebaseRequestHandler.Callback {
+        FirebaseRequestHandler.Callback,
+        YCBARequestHandler.Callback {
 
     private FirebaseRequestHandler mFirebaseRequestHandler;
+    private YCBARequestHandler mYCBARequestHandler;
+
+    private final String mObjectId = "499";
 
     private ImageView mImage;
     private TextView mTitle;
@@ -33,6 +39,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
 
         init();
         mFirebaseRequestHandler.getObjectIdsList();
+        mYCBARequestHandler.execute();
     }
 
     private void init() {
@@ -40,6 +47,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
                 this,
                 FirebaseRequestHandler.DATA_URL,
                 this);
+        mYCBARequestHandler = new YCBARequestHandler(this, mObjectId, this);
 
         mImage = (ImageView) findViewById(R.id.artwork_profile_image);
         mTitle = (TextView) findViewById(R.id.artwork_profile_title);
@@ -72,6 +80,14 @@ public class ArtworkProfileActivity extends FragmentActivity implements
 
     @Override
     public void onObjectIdsFetchFailed() {
+    }
+
+    @Override
+    public void onYCBAResponseFetched(YCBARequestHandler.Result result) {
+    }
+
+    @Override
+    public void onYCBARequestFailed() {
     }
 
 }
