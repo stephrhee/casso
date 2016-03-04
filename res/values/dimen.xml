@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <dimen name="divider_height">1dp</dimen>
+
     <dimen name="search_activity_left_right_padding">12dp</dimen>
 
     <dimen name="search_field_top_bottom_padding">12dp</dimen>
@@ -13,5 +15,10 @@
     <dimen name="search_suggestions_row_view_top_bottom_padding">@dimen/search_field_top_bottom_padding</dimen>
 
     <dimen name="search_box_edit_text_padding">10dp</dimen>
+
+    <dimen name="artwork_profile_artist_font_size">20sp</dimen>
+    <dimen name="artwork_profile_artwork_font_size">15sp</dimen>
+    <dimen name="artwork_profile_year_font_size">@dimen/artwork_profile_artwork_font_size</dimen>
+    <dimen name="artwork_profile_description_font_size">@dimen/artwork_profile_artwork_font_size</dimen>
 
 </resources>

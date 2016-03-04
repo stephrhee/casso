@@ -7,44 +7,52 @@
         android:background="@color/white">
 
     <ImageView
+            android:id="@+id/artwork_profile_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/artwork_profile_image"
             android:scaleType="fitXY"
             android:adjustViewBounds="true"
             />
 
     <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/artwork_profile_title"
-            android:textColor="@color/black"
-            android:padding="@dimen/search_box_edit_text_padding"
-            />
-
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray"/>
-
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/artwork_profile_artist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:textColor="@color/black"
+            android:textSize="@dimen/artwork_profile_artist_font_size"
+            android:padding="@dimen/search_box_edit_text_padding"
+            android:textStyle="bold"
+            />
+
+    <TextView
+            android:id="@+id/artwork_profile_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="@dimen/artwork_profile_artwork_font_size"
+            android:padding="@dimen/search_box_edit_text_padding"
+            />
+
+    <TextView
+            android:id="@+id/artwork_profile_year"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="@dimen/artwork_profile_artwork_font_size"
             android:padding="@dimen/search_box_edit_text_padding"
             />
 
     <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray"/>
+            android:layout_height="@dimen/divider_height"
+            android:background="@color/gray" />
 
     <TextView
+            android:id="@+id/artwork_profile_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/artwork_profile_year"
             android:textColor="@color/black"
+            android:textSize="@dimen/artwork_profile_description_font_size"
             android:padding="@dimen/search_box_edit_text_padding"
             />
 
