@@ -8,6 +8,7 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import casso.http.FirebaseRequestHandler;
 import com.casso.R;
 
 import java.util.List;

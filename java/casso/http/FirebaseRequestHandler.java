@@ -1,4 +1,4 @@
-package casso;
+package casso.http;
 
 import android.content.Context;
 import com.firebase.client.*;
@@ -20,7 +20,7 @@ public class FirebaseRequestHandler {
     private Firebase mFirebase;
     private Callback mCallback;
 
-    FirebaseRequestHandler(Context context, String dataUrl, Callback callback) {
+    public FirebaseRequestHandler(Context context, String dataUrl, Callback callback) {
         Firebase.setAndroidContext(context);
         mFirebase = new Firebase(dataUrl);
         mCallback = callback;
