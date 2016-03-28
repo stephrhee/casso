@@ -9,4 +9,6 @@
     <string name="search_artwork_question_string">What is the artwork?</string>
     <string name="search_suggestions_string">Suggestions</string>
 
+    <string name="artwork_profile_tags_string">Tags</string>
+
 </resources>

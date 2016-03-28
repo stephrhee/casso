@@ -1,59 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        >
 
-    <ImageView
-            android:id="@+id/artwork_profile_image"
+    <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="fitXY"
-            android:adjustViewBounds="true"
-            />
+            android:background="@color/white">
 
-    <TextView
-            android:id="@+id/artwork_profile_artist"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="@dimen/artwork_profile_artist_font_size"
-            android:padding="@dimen/search_box_edit_text_padding"
-            android:textStyle="bold"
-            />
+        <ImageView
+                android:id="@+id/artwork_profile_image"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                />
 
-    <TextView
-            android:id="@+id/artwork_profile_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="@dimen/artwork_profile_artwork_font_size"
-            android:padding="@dimen/search_box_edit_text_padding"
-            />
+        <TextView
+                android:id="@+id/artwork_profile_artist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="@dimen/artwork_profile_artist_font_size"
+                android:paddingTop="@dimen/search_box_edit_text_padding"
+                android:paddingLeft="@dimen/search_box_edit_text_padding"
+                android:paddingRight="@dimen/search_box_edit_text_padding"
+                android:textStyle="bold"
+                />
 
-    <TextView
-            android:id="@+id/artwork_profile_year"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="@dimen/artwork_profile_artwork_font_size"
-            android:padding="@dimen/search_box_edit_text_padding"
-            />
+        <TextView
+                android:id="@+id/artwork_profile_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="@dimen/artwork_profile_artwork_font_size"
+                android:paddingTop="@dimen/search_box_edit_text_padding"
+                android:paddingLeft="@dimen/search_box_edit_text_padding"
+                android:paddingRight="@dimen/search_box_edit_text_padding"
+                />
 
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_height"
-            android:background="@color/gray" />
+        <TextView
+                android:id="@+id/artwork_profile_year"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="@dimen/artwork_profile_artwork_font_size"
+                android:paddingLeft="@dimen/search_box_edit_text_padding"
+                android:paddingRight="@dimen/search_box_edit_text_padding"
+                android:paddingBottom="@dimen/search_box_edit_text_padding"
+                />
 
-    <TextView
-            android:id="@+id/artwork_profile_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="@dimen/artwork_profile_description_font_size"
-            android:padding="@dimen/search_box_edit_text_padding"
-            />
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:background="@color/gray" />
 
-</LinearLayout>
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="@dimen/artwork_profile_artist_font_size"
+                android:padding="@dimen/search_box_edit_text_padding"
+                android:text="@string/artwork_profile_tags_string"
+                />
+
+        <TextView
+                android:id="@+id/artwork_profile_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="@dimen/artwork_profile_description_font_size"
+                android:padding="@dimen/search_box_edit_text_padding"
+                />
+
+    </LinearLayout>
+
+</ScrollView>

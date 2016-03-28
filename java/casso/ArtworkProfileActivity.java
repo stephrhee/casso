@@ -10,9 +10,18 @@ import android.widget.TextView;
 
 import casso.http.FirebaseRequestHandler;
 import casso.http.YCBARequestHandler;
-
+import casso.model.Artwork;
+import casso.util.XmlUtil;
 import com.casso.R;
 
+import com.google.common.base.Joiner;
+
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class ArtworkProfileActivity extends FragmentActivity implements
@@ -24,6 +33,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
     private YCBARequestHandler mYCBARequestHandler;
 
     private final String mObjectId = "499";
+    private Artwork mArtwork;
 
     private ImageView mImage;
     private TextView mTitle;
@@ -54,15 +64,15 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         mArtist = (TextView) findViewById(R.id.artwork_profile_artist);
         mYear = (TextView) findViewById(R.id.artwork_profile_year);
         mDescription = (TextView) findViewById(R.id.artwork_profile_description);
+    }
 
+    private void setViews() {
         DownloadImageAsyncTask downloadImageAsyncTask = new DownloadImageAsyncTask(this);
-        String string = "http://www.pablopicasso.org/images/paintings/guernica3.jpg";
-        downloadImageAsyncTask.execute(string);
-
-        mTitle.setText("Guernica");
-        mArtist.setText("Pablo Picasso");
-        mYear.setText("1937");
-        mDescription.setText("The Starry Night is an oil on canvas by the Dutch post-impressionist painter Vincent van Gogh. Painted in June, 1889, it depicts the view from the east-facing window of his asylum room at Saint-Rémy-de-Provence, just before sunrise, with the addition of an idealized village.[1][2][3] It has been in the permanent collection of the Museum of Modern Art in New York City since 1941, acquired through the Lillie P. Bliss Bequest. It is regarded as among Van Gogh's finest works,[4] and is one of the most recognized paintings in the history of Western culture.[5][6]");
+        downloadImageAsyncTask.execute(mArtwork.mImageUrl);
+        mTitle.setText(mArtwork.mTitle);
+        mArtist.setText(mArtwork.mArtist);
+        mYear.setText(mArtwork.getYearRange());
+        mDescription.setText(Joiner.on(" | ").join(mArtwork.mTags));
     }
 
     @Override
@@ -84,10 +94,47 @@ public class ArtworkProfileActivity extends FragmentActivity implements
 
     @Override
     public void onYCBAResponseFetched(YCBARequestHandler.Result result) {
+        String xml = result.mString;
+        InputStream stream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
+        try {
+            Artwork.Builder builder = new Artwork.Builder();
+            XmlUtil.parse(stream, builder);
+            mArtwork = builder.build();
+            setViews();
+            testPrint();
+        } catch (XmlPullParserException | IOException e) {
+            Log.d("ArtworkProfileActivity", e.toString());
+        }
     }
 
     @Override
     public void onYCBARequestFailed() {
+    }
+
+    private void testPrint() {
+        /////////////////////////////
+        Log.d("steph", "genre: " + mArtwork.mGenre);
+        Log.d("steph", "category: " + mArtwork.mCategory);
+        Log.d("steph", "classification: " + mArtwork.mClassification);
+
+        if (mArtwork.mCurator != null) {
+            Log.d("steph", "curator: " + mArtwork.mCurator);
+            Log.d("steph", "curatorialComment: " + mArtwork.mCuratorialComment);
+        }
+
+        if (mArtwork.mObjectTypes != null && mArtwork.mObjectTypes.size() > 0) {
+            for (String objectType : mArtwork.mObjectTypes) {
+                Log.d("steph", "objectType: " + objectType);
+            }
+        }
+
+        if (mArtwork.mMaterials != null && mArtwork.mMaterials.size() > 0) {
+            for (String materials : mArtwork.mMaterials) {
+                Log.d("steph", "materials: " + materials);
+            }
+        }
+
+        /////////////////////////////
     }
 
 }

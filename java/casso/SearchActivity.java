@@ -26,8 +26,8 @@ public class SearchActivity extends FragmentActivity {
     private ListView mArtistSuggestionsListView;
     private ListView mArtworkSuggestionsListView;
 
-    private final List<String> mArtistSuggestions = Arrays.asList("Picasso", "Van Gogh", "Kandinsky", "Mondrian", "Warhol", "Monet", "Da Vinci");
-    private final List<String> mArtworkSuggestions = Arrays.asList("The Starry Night", "Mona Lisa", "Composition C");
+    private final List<String> mArtistSuggestions = Arrays.asList("Richard Cosway", "Francis Danby", "Benjamin van der Gucht", "Francis Hayman", "Thomas Hickey", "William Hodges", "Edward Lear");
+    private final List<String> mArtworkSuggestions = Arrays.asList("Portrait of an Armenian", "The Mountain Torrent", "Henry Woodward as Petruchio in Catherine and Petruchio", "The Good Samaritan", "Purniya, Chief Minister of Mysore", "Storm on the Ganges, with Mrs. Hastings near the Col-gon Rocks", "Philae, Egypt");
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
