@@ -101,7 +101,6 @@ public class ArtworkProfileActivity extends FragmentActivity implements
             XmlUtil.parse(stream, builder);
             mArtwork = builder.build();
             setViews();
-            testPrint();
         } catch (XmlPullParserException | IOException e) {
             Log.d("ArtworkProfileActivity", e.toString());
         }
@@ -112,29 +111,23 @@ public class ArtworkProfileActivity extends FragmentActivity implements
     }
 
     private void testPrint() {
-        /////////////////////////////
-        Log.d("steph", "genre: " + mArtwork.mGenre);
-        Log.d("steph", "category: " + mArtwork.mCategory);
-        Log.d("steph", "classification: " + mArtwork.mClassification);
-
+        Log.d("ArtworkProfileActivity", "genre: " + mArtwork.mGenre);
+        Log.d("ArtworkProfileActivity", "category: " + mArtwork.mCategory);
+        Log.d("ArtworkProfileActivity", "classification: " + mArtwork.mClassification);
         if (mArtwork.mCurator != null) {
-            Log.d("steph", "curator: " + mArtwork.mCurator);
-            Log.d("steph", "curatorialComment: " + mArtwork.mCuratorialComment);
+            Log.d("ArtworkProfileActivity", "curator: " + mArtwork.mCurator);
+            Log.d("ArtworkProfileActivity", "curatorialComment: " + mArtwork.mCuratorialComment);
         }
-
         if (mArtwork.mObjectTypes != null && mArtwork.mObjectTypes.size() > 0) {
             for (String objectType : mArtwork.mObjectTypes) {
-                Log.d("steph", "objectType: " + objectType);
+                Log.d("ArtworkProfileActivity", "objectType: " + objectType);
             }
         }
-
         if (mArtwork.mMaterials != null && mArtwork.mMaterials.size() > 0) {
             for (String materials : mArtwork.mMaterials) {
-                Log.d("steph", "materials: " + materials);
+                Log.d("ArtworkProfileActivity", "materials: " + materials);
             }
         }
-
-        /////////////////////////////
     }
 
 }
