@@ -14,4 +14,7 @@ public class StringUtil {
         }
     }
 
+    public static String stripParentheses(String string) {
+        return string.split(" \\(")[0];
+    }
 }

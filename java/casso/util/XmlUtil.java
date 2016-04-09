@@ -9,7 +9,9 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class XmlUtil {
 
@@ -645,7 +647,7 @@ public class XmlUtil {
 
     private static void readLidoSubject(XmlPullParser parser, Artwork.Builder builder)
             throws XmlPullParserException, IOException {
-        List<String> tags = new ArrayList<>();
+        Set<String> tagsSet = new HashSet<>();
         parser.require(XmlPullParser.START_TAG, NAMESPACE, LIDO_SUBJECT);
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -665,10 +667,12 @@ public class XmlUtil {
                 skip(parser);
             }
             if (tag != null) {
-                tags.add(tag);
+                tagsSet.add(StringUtil.stripParentheses(tag));
             }
         }
-        builder.setTags(tags.size() > 0 ? tags : null);
+        List<String> tagsList = new ArrayList<>();
+        tagsList.addAll(tagsSet);
+        builder.setTags(tagsList.size() > 0 ? tagsList : null);
     }
 
     private static String readLidoSubjectConcept(XmlPullParser parser)
