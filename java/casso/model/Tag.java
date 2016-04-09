@@ -2,6 +2,7 @@ package casso.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import com.google.common.base.Preconditions;
 
 public class Tag implements Parcelable {
 
@@ -11,6 +12,7 @@ public class Tag implements Parcelable {
     private Tag(
             String tag,
             int count) {
+        Preconditions.checkArgument(tag != null);
         mName = tag;
         mCount = count;
     }
