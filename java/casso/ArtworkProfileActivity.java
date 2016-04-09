@@ -11,11 +11,13 @@ import android.widget.TextView;
 import casso.http.FirebaseRequestHandler;
 import casso.http.YCBARequestHandler;
 import casso.model.Artwork;
+import casso.util.StringUtil;
 import casso.util.XmlUtil;
 import com.casso.R;
 
 import com.google.common.base.Joiner;
 
+import com.google.common.collect.Lists;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.ByteArrayInputStream;
@@ -72,7 +74,9 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         mTitle.setText(mArtwork.mTitle);
         mArtist.setText(mArtwork.mArtist);
         mYear.setText(mArtwork.getYearRange());
-        mTags.setText(Joiner.on(" | ").join(mArtwork.mTags));
+        mTags.setText(Joiner.on(" | ").join(Lists.transform(
+                mArtwork.mTags,
+                StringUtil.tagsToTagStrings)));
     }
 
     @Override

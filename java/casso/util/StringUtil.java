@@ -1,5 +1,8 @@
 package casso.util;
 
+import casso.model.Tag;
+import com.google.common.base.Function;
+
 public class StringUtil {
 
     public static String getStringOrNull(String string) {
@@ -17,4 +20,11 @@ public class StringUtil {
     public static String stripParentheses(String string) {
         return string.split(" \\(")[0];
     }
+
+    public static Function<Tag, String> tagsToTagStrings = new Function<Tag, String>() {
+        public String apply(Tag tag) {
+            return tag.mName;
+        }
+    };
+
 }
