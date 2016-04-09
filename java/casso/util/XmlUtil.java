@@ -8,10 +8,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class XmlUtil {
 
@@ -672,6 +669,7 @@ public class XmlUtil {
         }
         List<String> tagsList = new ArrayList<>();
         tagsList.addAll(tagsSet);
+        Collections.sort(tagsList);
         builder.setTags(tagsList.size() > 0 ? tagsList : null);
     }
 
