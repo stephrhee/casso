@@ -39,7 +39,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
     private TextView mTitle;
     private TextView mArtist;
     private TextView mYear;
-    private TextView mDescription;
+    private TextView mTags;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,7 +63,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         mTitle = (TextView) findViewById(R.id.artwork_profile_title);
         mArtist = (TextView) findViewById(R.id.artwork_profile_artist);
         mYear = (TextView) findViewById(R.id.artwork_profile_year);
-        mDescription = (TextView) findViewById(R.id.artwork_profile_description);
+        mTags = (TextView) findViewById(R.id.artwork_profile_tags);
     }
 
     private void setViews() {
@@ -72,7 +72,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         mTitle.setText(mArtwork.mTitle);
         mArtist.setText(mArtwork.mArtist);
         mYear.setText(mArtwork.getYearRange());
-        mDescription.setText(Joiner.on(" | ").join(mArtwork.mTags));
+        mTags.setText(Joiner.on(" | ").join(mArtwork.mTags));
     }
 
     @Override
