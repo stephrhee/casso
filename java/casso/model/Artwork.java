@@ -25,7 +25,7 @@ public class Artwork implements Parcelable {
     public final @Nullable List<String> mMaterials;
     public final @Nullable String mCurator;
     public final @Nullable String mCuratorialComment;
-    public final @Nullable List<String> mTags;
+    public final @Nullable List<Tag> mTags;
 
     private Artwork(
             String title,
@@ -42,7 +42,7 @@ public class Artwork implements Parcelable {
             @Nullable List<String> materials,
             @Nullable String curator,
             @Nullable String curatorialComment,
-            @Nullable List<String> tags) {
+            @Nullable List<Tag> tags) {
         Preconditions.checkArgument(title != null && artist != null);
         mTitle = title;
         mArtist = artist;
@@ -90,7 +90,7 @@ public class Artwork implements Parcelable {
         private @Nullable List<String> mMaterials;
         private @Nullable String mCurator;
         private @Nullable String mCuratorialComment;
-        private  @Nullable List<String> mTags;
+        private  @Nullable List<Tag> mTags;
 
         public Builder setTitle(String title) {
             mTitle = title;
@@ -162,7 +162,7 @@ public class Artwork implements Parcelable {
             return this;
         }
 
-        public Builder setTags(List<String> tags) {
+        public Builder setTags(List<Tag> tags) {
             mTags = tags;
             return this;
         }
@@ -238,8 +238,8 @@ public class Artwork implements Parcelable {
         in.readList(mMaterials, String.class.getClassLoader());
         mCurator = in.readString();
         mCuratorialComment = in.readString();
-        mTags = new ArrayList<String>();
-        in.readList(mTags, String.class.getClassLoader());
+        mTags = new ArrayList<Tag>();
+        in.readList(mTags, Tag.class.getClassLoader());
     }
 
 }

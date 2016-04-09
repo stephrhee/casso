@@ -3,6 +3,7 @@ package casso.util;
 import android.support.annotation.Nullable;
 import android.util.Xml;
 import casso.model.Artwork;
+import casso.model.Tag;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -667,9 +668,14 @@ public class XmlUtil {
                 tagsSet.add(StringUtil.stripParentheses(tag));
             }
         }
-        List<String> tagsList = new ArrayList<>();
-        tagsList.addAll(tagsSet);
-        Collections.sort(tagsList);
+        List<String> tagsStringList = new ArrayList<>();
+        tagsStringList.addAll(tagsSet);
+        Collections.sort(tagsStringList);
+        List<Tag> tagsList = new ArrayList<>();
+        for (String string: tagsStringList) {
+            Tag tag = new Tag.Builder().setName(string).build();
+            tagsList.add(tag);
+        }
         builder.setTags(tagsList.size() > 0 ? tagsList : null);
     }
 
