@@ -2,56 +2,61 @@ package casso.widget;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
+import casso.model.Artwork;
 
 import java.util.List;
 
-/**
- * Created by stephrhee on 4/11/16.
- */
-
-public class CenterLockHorizontalScrollviewAdapter extends ArrayAdapter<Drawable> {
+public class CenterLockHorizontalScrollviewAdapter extends ArrayAdapter<Artwork> {
 
     private final Context mContext;
     private final int mRowViewResourceId;
-    private List<Drawable> mDrawableList;
+    private List<Artwork> mArtworks;
 
     public CenterLockHorizontalScrollviewAdapter(
             Context context,
             int rowViewResourceId,
-            List<Drawable> drawableList) {
-        super(context, rowViewResourceId, drawableList);
+            List<Artwork> artworks) {
+        super(context, rowViewResourceId, artworks);
         mContext = context;
         mRowViewResourceId = rowViewResourceId;
-        mDrawableList = drawableList;
+        mArtworks = artworks;
+    }
+
+    @Override
+    public Artwork getItem(int position) {
+        return mArtworks.get(position);
+    }
+
+    @Override
+    public int getCount() {
+        return mArtworks.size();
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View rowView = convertView;
+        View imageView = convertView;
         Holder holder;
 
-        if (rowView == null) {
+        if (imageView == null) {
             LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
-            rowView = inflater.inflate(mRowViewResourceId, parent, false);
+            imageView = inflater.inflate(mRowViewResourceId, parent, false);
             holder = new Holder();
-            holder.imageView = (ImageView) rowView;
-            rowView.setTag(holder);
+            holder.squareImageView = (SquareImageView) imageView;
+            imageView.setTag(holder);
         } else {
-            holder = (Holder) rowView.getTag();
+            holder = (Holder) imageView.getTag();
         }
-        holder.imageView.setImageDrawable(mDrawableList.get(position));
+        holder.squareImageView.setImageBitmap(mArtworks.get(position).mImageBitmap);
 
-        return rowView;
+        return imageView;
     }
 
     private class Holder {
-        public ImageView imageView;
+        public SquareImageView squareImageView;
     }
 
 }
