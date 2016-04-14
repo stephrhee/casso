@@ -26,6 +26,7 @@ public class Artwork implements Parcelable {
     public final @Nullable String mCurator;
     public final @Nullable String mCuratorialComment;
     public final @Nullable List<Tag> mTags;
+    public final @Nullable List<Artwork> mSuggestedArtworks;
 
     private Artwork(
             String title,
@@ -42,7 +43,8 @@ public class Artwork implements Parcelable {
             @Nullable List<String> materials,
             @Nullable String curator,
             @Nullable String curatorialComment,
-            @Nullable List<Tag> tags) {
+            @Nullable List<Tag> tags,
+            @Nullable List<Artwork> suggestedArtworks) {
         Preconditions.checkArgument(title != null && artist != null);
         mTitle = title;
         mArtist = artist;
@@ -59,6 +61,7 @@ public class Artwork implements Parcelable {
         mCurator = curator;
         mCuratorialComment = curatorialComment;
         mTags = tags;
+        mSuggestedArtworks = suggestedArtworks;
     }
 
     public String getYearRange() {
@@ -90,7 +93,8 @@ public class Artwork implements Parcelable {
         private @Nullable List<String> mMaterials;
         private @Nullable String mCurator;
         private @Nullable String mCuratorialComment;
-        private  @Nullable List<Tag> mTags;
+        private @Nullable List<Tag> mTags;
+        private @Nullable List<Artwork> mSuggestedArtworks;
 
         public Builder setTitle(String title) {
             mTitle = title;
@@ -167,6 +171,11 @@ public class Artwork implements Parcelable {
             return this;
         }
 
+        public Builder setSuggestedArtworks(List<Artwork> suggestedArtworks) {
+            mSuggestedArtworks = suggestedArtworks;
+            return this;
+        }
+
         public Artwork build() {
             return new Artwork(
                     mTitle,
@@ -183,7 +192,8 @@ public class Artwork implements Parcelable {
                     mMaterials,
                     mCurator,
                     mCuratorialComment,
-                    mTags);
+                    mTags,
+                    mSuggestedArtworks);
         }
     }
 
@@ -207,6 +217,7 @@ public class Artwork implements Parcelable {
         out.writeString(mCurator);
         out.writeString(mCuratorialComment);
         out.writeList(mTags);
+        out.writeList(mSuggestedArtworks);
     }
 
     public static final Parcelable.Creator<Artwork> CREATOR = new Parcelable.Creator<Artwork>() {
@@ -240,6 +251,8 @@ public class Artwork implements Parcelable {
         mCuratorialComment = in.readString();
         mTags = new ArrayList<Tag>();
         in.readList(mTags, Tag.class.getClassLoader());
+        mSuggestedArtworks = new ArrayList<Artwork>();
+        in.readList(mSuggestedArtworks, Artwork.class.getClassLoader());
     }
 
 }
