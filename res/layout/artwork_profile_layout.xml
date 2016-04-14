@@ -14,7 +14,7 @@
         <ImageView
                 android:id="@+id/artwork_profile_image"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="wrap_content"
                 android:scaleType="centerCrop"
                 android:adjustViewBounds="true"
                 />
