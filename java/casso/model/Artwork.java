@@ -176,6 +176,26 @@ public class Artwork implements Parcelable {
             return this;
         }
 
+        public Builder fromOld(Artwork oldArtwork) {
+            mTitle = oldArtwork.mTitle;
+            mArtist = oldArtwork.mArtist;
+            mYear = oldArtwork.mYear;
+            mImageUrl = oldArtwork.mImageUrl;
+            mImageBitmap = oldArtwork.mImageBitmap;
+            mCategory = oldArtwork.mCategory;
+            mObjectTypes = oldArtwork.mObjectTypes;
+            mGenre = oldArtwork.mGenre;
+            mClassification = oldArtwork.mClassification;
+            mStartYear = oldArtwork.mStartYear;
+            mEndYear = oldArtwork.mEndYear;
+            mMaterials = oldArtwork.mMaterials;
+            mCurator = oldArtwork.mCurator;
+            mCuratorialComment = oldArtwork.mCuratorialComment;
+            mTags = oldArtwork.mTags;
+            mSuggestedArtworks = oldArtwork.mSuggestedArtworks;
+            return this;
+        }
+
         public Artwork build() {
             return new Artwork(
                     mTitle,
