@@ -13,11 +13,14 @@ import casso.http.YCBARequestHandler;
 import casso.model.Artwork;
 import casso.util.StringUtil;
 import casso.util.XmlUtil;
+import casso.widget.CenterLockHorizontalScrollview;
+import casso.widget.CenterLockHorizontalScrollviewAdapter;
+
 import com.casso.R;
 
 import com.google.common.base.Joiner;
-
 import com.google.common.collect.Lists;
+
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.ByteArrayInputStream;
@@ -37,11 +40,14 @@ public class ArtworkProfileActivity extends FragmentActivity implements
     private final String mObjectId = "499";
     private Artwork mArtwork;
 
+    private int fetchedSuggestedArtworksCount = 0;
+
     private ImageView mImage;
     private TextView mTitle;
     private TextView mArtist;
     private TextView mYear;
     private TextView mTags;
+    private CenterLockHorizontalScrollview mSuggestedArtworks;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +72,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         mArtist = (TextView) findViewById(R.id.artwork_profile_artist);
         mYear = (TextView) findViewById(R.id.artwork_profile_year);
         mTags = (TextView) findViewById(R.id.artwork_profile_tags);
+        mSuggestedArtworks = (CenterLockHorizontalScrollview) findViewById(R.id.suggested_artworks_scrollview);
     }
 
     private void setViews() {
@@ -84,8 +91,47 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         if (bitmap != null) {
             mImage.setImageBitmap(bitmap);
         } else {
-            Log.e("Error", "bitmap could not be fetched");
+            Log.e("ArtworkProfileActivity", "bitmap could not be fetched");
         }
+    }
+
+    private void downloadSuggestedArtworksImages() {
+        if (mArtwork.mSuggestedArtworks != null) {
+            for (int position = 0; position < mArtwork.mSuggestedArtworks.size(); position++) {
+                DownloadImageAsyncTask downloadImageAsyncTask =
+                        new DownloadImageAsyncTask(getCallback(position));
+                downloadImageAsyncTask.execute(mArtwork.mSuggestedArtworks.get(position).mImageUrl);
+            }
+        }
+    }
+
+    private DownloadImageAsyncTask.Callback getCallback(final int position) {
+        return new DownloadImageAsyncTask.Callback() {
+            @Override
+            public void onBitmapFetched(Bitmap bitmap) {
+                if (bitmap != null) {
+                    Artwork newArtwork = new Artwork.Builder()
+                            .fromOld(mArtwork.mSuggestedArtworks.get(position))
+                            .setImageBitmap(bitmap)
+                            .build();
+                    mArtwork.mSuggestedArtworks.set(position, newArtwork);
+                    fetchedSuggestedArtworksCount += 1;
+                    if (fetchedSuggestedArtworksCount == mArtwork.mSuggestedArtworks.size()) {
+                        renderSuggestedArtworks();
+                    }
+                } else {
+                    Log.e("ArtworkProfileActivity", "bitmap could not be fetched");
+                }
+            }
+        };
+    }
+
+    private void renderSuggestedArtworks() {
+        CenterLockHorizontalScrollviewAdapter adapter = new CenterLockHorizontalScrollviewAdapter(
+                this,
+                R.layout.suggested_artworks_square_image_view,
+                mArtwork.mSuggestedArtworks);
+        mSuggestedArtworks.setAdapter(adapter);
     }
 
     @Override
@@ -105,6 +151,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
             XmlUtil.parse(stream, builder);
             mArtwork = builder.build();
             setViews();
+            downloadSuggestedArtworksImages();
         } catch (XmlPullParserException | IOException e) {
             Log.d("ArtworkProfileActivity", e.toString());
         }
