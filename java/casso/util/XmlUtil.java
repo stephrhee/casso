@@ -21,6 +21,8 @@ public class XmlUtil {
     private static final String OAI_PMH = "OAI-PMH";
     private static final String GET_RECORD = "GetRecord";
     private static final String RECORD = "record";
+    private static final String HEADER = "header";
+    private static final String IDENTIFIER = "identifier";
     private static final String METADATA = "metadata";
     private static final String LIDO_LIDO = "lido:lido";
 
@@ -131,8 +133,27 @@ public class XmlUtil {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
-            if (parser.getName().equals(METADATA)) {
+            if (parser.getName().equals(HEADER)) {
+                readHeader(parser, builder);
+            } else if (parser.getName().equals(METADATA)) {
                 readMetadata(parser, builder);
+            } else {
+                skip(parser);
+            }
+        }
+    }
+
+    private static void readHeader (XmlPullParser parser, Artwork.Builder builder)
+            throws XmlPullParserException, IOException {
+        parser.require(XmlPullParser.START_TAG, NAMESPACE, HEADER);
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            if (parser.getName().equals(IDENTIFIER)) {
+                String identifierString = readTag(parser, IDENTIFIER);
+                Integer id = StringUtil.getIdFromIdentifier(identifierString);
+                builder.setId(id);
             } else {
                 skip(parser);
             }

@@ -27,4 +27,15 @@ public class StringUtil {
         }
     };
 
+    public static Integer getIdFromIdentifier(String identifier) {
+        String[] splitSubStrings = identifier.split(":");
+        for (String subString : splitSubStrings) {
+            Integer integer = getIntegerOrNull(subString);
+            if (integer != null) {
+                return integer;
+            }
+        }
+        return null;
+    }
+
 }
