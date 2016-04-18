@@ -11,6 +11,7 @@ import java.util.List;
 
 public class Artwork implements Parcelable {
 
+    public final Integer mId;
     public final String mTitle;
     public final String mArtist;
     public final @Nullable String mYear;
@@ -29,6 +30,7 @@ public class Artwork implements Parcelable {
     public final @Nullable List<Artwork> mSuggestedArtworks;
 
     private Artwork(
+            Integer id,
             String title,
             String artist,
             @Nullable String year,
@@ -45,7 +47,8 @@ public class Artwork implements Parcelable {
             @Nullable String curatorialComment,
             @Nullable List<Tag> tags,
             @Nullable List<Artwork> suggestedArtworks) {
-        Preconditions.checkArgument(title != null && artist != null);
+        Preconditions.checkArgument(id != null && title != null && artist != null);
+        mId = id;
         mTitle = title;
         mArtist = artist;
         mYear = year;
@@ -79,6 +82,7 @@ public class Artwork implements Parcelable {
     }
 
     public static class Builder {
+        private Integer mId;
         private String mTitle;
         private String mArtist;
         private @Nullable String mYear;
@@ -95,6 +99,11 @@ public class Artwork implements Parcelable {
         private @Nullable String mCuratorialComment;
         private @Nullable List<Tag> mTags;
         private @Nullable List<Artwork> mSuggestedArtworks;
+
+        public Builder setId(Integer id) {
+            mId = id;
+            return this;
+        }
 
         public Builder setTitle(String title) {
             mTitle = title;
@@ -177,6 +186,7 @@ public class Artwork implements Parcelable {
         }
 
         public Builder fromOld(Artwork oldArtwork) {
+            mId = oldArtwork.mId;
             mTitle = oldArtwork.mTitle;
             mArtist = oldArtwork.mArtist;
             mYear = oldArtwork.mYear;
@@ -198,6 +208,7 @@ public class Artwork implements Parcelable {
 
         public Artwork build() {
             return new Artwork(
+                    mId,
                     mTitle,
                     mArtist,
                     mYear,
@@ -222,6 +233,7 @@ public class Artwork implements Parcelable {
     }
 
     public void writeToParcel(Parcel out, int flags) {
+        out.writeInt(mId);
         out.writeString(mTitle);
         out.writeString(mArtist);
         out.writeString(mYear);
@@ -251,6 +263,7 @@ public class Artwork implements Parcelable {
     };
 
     private Artwork(Parcel in) {
+        mId = in.readInt();
         mTitle = in.readString();
         mArtist = in.readString();
         mYear = in.readString();
