@@ -25,16 +25,18 @@ public class SuggestedArtworksRequestHandler {
     private Context mContext;
     private Callback mCallback;
 
-
     private List<Artwork> mSuggestedArtworks;
     private int mFetchedSuggestedArtworksCount = 0;
+
+    private String mLastClickedTagName;
 
     public SuggestedArtworksRequestHandler(Context context, Callback callback) {
         mContext = context;
         mCallback = callback;
     }
 
-    public void showSuggestedArtworks(String tagName) {
+    public void showSuggestedArtworks(final String tagName) {
+        mLastClickedTagName = tagName;
         FirebaseRequestHandler getIdsFromTagFirebaseRequestHandler = new FirebaseRequestHandler(
                 mContext,
                 FirebaseRequestHandler.DATA_URL,
@@ -44,7 +46,7 @@ public class SuggestedArtworksRequestHandler {
                         if (ids == null) {
                             onIdsFetchedFailed();
                         } else {
-                            fetchSuggestedArtworks(ids);
+                            fetchSuggestedArtworks(ids, tagName);
                         }
                     }
 
@@ -56,39 +58,47 @@ public class SuggestedArtworksRequestHandler {
         getIdsFromTagFirebaseRequestHandler.getIdsForTag(tagName);
     }
 
-    private void fetchSuggestedArtworks(List<Integer> ids) {
+    private void fetchSuggestedArtworks(List<Integer> ids, String originatedTagName) {
         mSuggestedArtworks = new ArrayList<>();
         for (Integer id : ids) {
             YCBARequestHandler ycbaRequestHandler = new YCBARequestHandler(
                     mContext,
                     id.toString(),
-                    new YCBARequestHandler.Callback() {
-                        @Override
-                        public void onYCBAResponseFetched(YCBARequestHandler.Result result) {
-                            String xml = result.mString;
-                            InputStream stream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
-                            try {
-                                Artwork.Builder builder = new Artwork.Builder();
-                                XmlUtil.parse(stream, builder);
-                                Artwork suggestedArtwork = builder.build();
-                                mSuggestedArtworks.add(suggestedArtwork);
-                                DownloadImageAsyncTask downloadImageAsyncTask =
-                                        new DownloadImageAsyncTask(getDownloadImageCallback(
-                                                mSuggestedArtworks.size() - 1));
-                                downloadImageAsyncTask.execute(suggestedArtwork.mLowResImageUrl);
-                            } catch (XmlPullParserException | IOException e) {
-                                Log.d("SuggestedArtworks", e.toString());
-                                mCallback.onSuggestedArtworksImagesFetchedFailed();
-                            }
-                        }
-
-                        @Override
-                        public void onYCBARequestFailed() {
-                            mCallback.onSuggestedArtworksImagesFetchedFailed();
-                        }
-                    });
+                    getYCBARRequestCallback(originatedTagName));
             ycbaRequestHandler.execute();
         }
+    }
+
+    private YCBARequestHandler.Callback getYCBARRequestCallback(final String originatedTagName) {
+        return new YCBARequestHandler.Callback() {
+            @Override
+            public void onYCBAResponseFetched(YCBARequestHandler.Result result) {
+                if (originatedTagName.equals(mLastClickedTagName)) {
+                    String xml = result.mString;
+                    InputStream stream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
+                    try {
+                        Artwork.Builder builder = new Artwork.Builder();
+                        XmlUtil.parse(stream, builder);
+                        Artwork suggestedArtwork = builder.build();
+                        mSuggestedArtworks.add(suggestedArtwork);
+                        DownloadImageAsyncTask downloadImageAsyncTask =
+                                new DownloadImageAsyncTask(getDownloadImageCallback(
+                                        mSuggestedArtworks.size() - 1));
+                        downloadImageAsyncTask.execute(suggestedArtwork.mLowResImageUrl);
+                    } catch (XmlPullParserException | IOException e) {
+                        Log.d("SuggestedArtworks", e.toString());
+                        mCallback.onSuggestedArtworksImagesFetchedFailed();
+                    }
+                }
+            }
+
+            @Override
+            public void onYCBARequestFailed() {
+                if (originatedTagName.equals(mLastClickedTagName)) {
+                    mCallback.onSuggestedArtworksImagesFetchedFailed();
+                }
+            }
+        };
     }
 
     private DownloadImageAsyncTask.Callback getDownloadImageCallback(final int position) {
