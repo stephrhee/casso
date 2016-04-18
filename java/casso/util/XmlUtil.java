@@ -80,6 +80,7 @@ public class XmlUtil {
     private static final String CURATORIAL_COMMENT = "Curatorial comment";
     private static final String GENRE = "Genre";
     private static final String LARGE = "large";
+    private static final String THUMB = "thumb";
     private static final String OBJECT_NAME = "Object name";
     private static final String PREFERRED = "preferred";
 
@@ -808,26 +809,32 @@ public class XmlUtil {
             String name = parser.getName();
             String type = parser.getAttributeValue(NAMESPACE, LIDO_TYPE);
             if (name.equals(LIDO_RESOURCE_REPRESENTATION) && type.equals(LARGE)) {
-                readLidoResourceRepresentation(parser, builder);
+                String highResImageUrl = readLidoResourceRepresentation(parser);
+                builder.setHighResImageUrl(highResImageUrl);
+            } else if (name.equals(LIDO_RESOURCE_REPRESENTATION) && type.equals(THUMB)) {
+                String lowResImageUrl = readLidoResourceRepresentation(parser);
+                builder.setLowResImageUrl(lowResImageUrl);
             } else {
                 skip(parser);
             }
         }
     }
 
-    private static void readLidoResourceRepresentation(XmlPullParser parser, Artwork.Builder builder)
+    private static String readLidoResourceRepresentation(XmlPullParser parser)
             throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, NAMESPACE, LIDO_RESOURCE_REPRESENTATION);
+        String imageUrl = null;
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
             if (parser.getName().equals(LIDO_LINK_RESOURCE)) {
-                builder.setImageUrl(readTag(parser, LIDO_LINK_RESOURCE));
+                imageUrl = readTag(parser, LIDO_LINK_RESOURCE);
             } else {
                 skip(parser);
             }
         }
+        return imageUrl;
     }
 
     private static String readText(XmlPullParser parser) throws XmlPullParserException, IOException {

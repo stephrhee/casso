@@ -1,8 +1,13 @@
 package casso;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -10,17 +15,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import casso.http.FirebaseRequestHandler;
+import casso.http.SuggestedArtworksRequestHandler;
 import casso.http.YCBARequestHandler;
 import casso.model.Artwork;
-import casso.util.StringUtil;
+import casso.model.Tag;
 import casso.util.XmlUtil;
 import casso.widget.CenterLockHorizontalScrollview;
 import casso.widget.CenterLockHorizontalScrollviewAdapter;
 
 import com.casso.R;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
+import com.google.common.base.Preconditions;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -35,20 +40,17 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         FirebaseRequestHandler.GetObjectIdsCallback,
         YCBARequestHandler.Callback {
 
-    private FirebaseRequestHandler mFirebaseRequestHandler;
     private YCBARequestHandler mYCBARequestHandler;
 
-    private final String mObjectId = "499";
+    private final String mObjectId = "109";
     private Artwork mArtwork;
-
-    private int fetchedSuggestedArtworksCount = 0;
 
     private ImageView mImage;
     private TextView mTitle;
     private TextView mArtist;
     private TextView mYear;
     private TextView mTags;
-    private CenterLockHorizontalScrollview mSuggestedArtworks;
+    private CenterLockHorizontalScrollview mSuggestedArtworksScrollview;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,15 +59,10 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         setContentView(R.layout.artwork_profile_layout);
 
         init();
-        mFirebaseRequestHandler.getObjectIdsList();
         mYCBARequestHandler.execute();
     }
 
     private void init() {
-        mFirebaseRequestHandler = new FirebaseRequestHandler(
-                this,
-                FirebaseRequestHandler.DATA_URL,
-                this);
         mYCBARequestHandler = new YCBARequestHandler(this, mObjectId, this);
 
         mImage = (ImageView) findViewById(R.id.artwork_profile_image);
@@ -73,18 +70,23 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         mArtist = (TextView) findViewById(R.id.artwork_profile_artist);
         mYear = (TextView) findViewById(R.id.artwork_profile_year);
         mTags = (TextView) findViewById(R.id.artwork_profile_tags);
-        mSuggestedArtworks = (CenterLockHorizontalScrollview) findViewById(R.id.suggested_artworks_scrollview);
+        mSuggestedArtworksScrollview = (CenterLockHorizontalScrollview) findViewById(R.id.suggested_artworks_scrollview);
     }
 
     private void setViews() {
         DownloadImageAsyncTask downloadImageAsyncTask = new DownloadImageAsyncTask(this);
-        downloadImageAsyncTask.execute(mArtwork.mImageUrl);
+        downloadImageAsyncTask.execute(mArtwork.mHighResImageUrl);
         mTitle.setText(mArtwork.mTitle);
         mArtist.setText(mArtwork.mArtist);
         mYear.setText(mArtwork.getYearRange());
-        mTags.setText(Joiner.on(" | ").join(Lists.transform(
-                mArtwork.mTags,
-                StringUtil.tagsToTagStrings)));
+        if (mArtwork.mTags != null) {
+            mTags.setText(getSpannableStringOfTags());
+            mTags.setMovementMethod(LinkMovementMethod.getInstance());
+        } else {
+            mTags.setVisibility(View.GONE);
+            mSuggestedArtworksScrollview.setVisibility(View.GONE);
+        }
+        mSuggestedArtworksScrollview.setVisibility(View.GONE);
     }
 
     @Override
@@ -93,51 +95,6 @@ public class ArtworkProfileActivity extends FragmentActivity implements
             mImage.setImageBitmap(bitmap);
         } else {
             Log.e("ArtworkProfileActivity", "bitmap could not be fetched");
-        }
-    }
-
-    private void downloadSuggestedArtworksImages() {
-        if (mArtwork.mSuggestedArtworks != null) {
-            for (int position = 0; position < mArtwork.mSuggestedArtworks.size(); position++) {
-                DownloadImageAsyncTask downloadImageAsyncTask =
-                        new DownloadImageAsyncTask(getCallback(position));
-                downloadImageAsyncTask.execute(mArtwork.mSuggestedArtworks.get(position).mImageUrl);
-            }
-        } else {
-            mSuggestedArtworks.setVisibility(View.GONE);
-        }
-    }
-
-    private DownloadImageAsyncTask.Callback getCallback(final int position) {
-        return new DownloadImageAsyncTask.Callback() {
-            @Override
-            public void onBitmapFetched(Bitmap bitmap) {
-                if (bitmap != null) {
-                    Artwork newArtwork = new Artwork.Builder()
-                            .fromOld(mArtwork.mSuggestedArtworks.get(position))
-                            .setImageBitmap(bitmap)
-                            .build();
-                    mArtwork.mSuggestedArtworks.set(position, newArtwork);
-                    fetchedSuggestedArtworksCount += 1;
-                    if (fetchedSuggestedArtworksCount == mArtwork.mSuggestedArtworks.size()) {
-                        renderSuggestedArtworks();
-                    }
-                } else {
-                    Log.e("ArtworkProfileActivity", "bitmap could not be fetched");
-                }
-            }
-        };
-    }
-
-    private void renderSuggestedArtworks() {
-        if (mArtwork.mSuggestedArtworks != null && mArtwork.mSuggestedArtworks.size() > 0) {
-            CenterLockHorizontalScrollviewAdapter adapter = new CenterLockHorizontalScrollviewAdapter(
-                    this,
-                    R.layout.suggested_artworks_square_image_view,
-                    mArtwork.mSuggestedArtworks);
-            mSuggestedArtworks.setAdapter(adapter);
-        } else {
-            mSuggestedArtworks.setVisibility(View.GONE);
         }
     }
 
@@ -158,7 +115,6 @@ public class ArtworkProfileActivity extends FragmentActivity implements
             XmlUtil.parse(stream, builder);
             mArtwork = builder.build();
             setViews();
-            downloadSuggestedArtworksImages();
         } catch (XmlPullParserException | IOException e) {
             Log.d("ArtworkProfileActivity", e.toString());
         }
@@ -186,6 +142,58 @@ public class ArtworkProfileActivity extends FragmentActivity implements
                 Log.d("ArtworkProfileActivity", "materials: " + materials);
             }
         }
+    }
+
+    private SpannableString getSpannableStringOfTags() {
+        Preconditions.checkNotNull(mArtwork.mTags);
+        SpannableString spannableString = new SpannableString(mArtwork.getTagsAsOneString());
+        int startIndex = 0;
+        for (Tag tag : mArtwork.mTags) {
+            String tagName = tag.mName;
+            ClickableSpan clickableSpan = getClickableSpan(this, tagName);
+            spannableString.setSpan(
+                    clickableSpan,
+                    startIndex,
+                    startIndex + tagName.length(),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            startIndex += tagName.length() + 1;
+        }
+        return spannableString;
+    }
+
+    private ClickableSpan getClickableSpan(final Context context, final String tagName) {
+        return new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                SuggestedArtworksRequestHandler suggestedArtworksRequestHandler =
+                        new SuggestedArtworksRequestHandler(
+                                context,
+                                getSuggestedArtworkCallback(context));
+                suggestedArtworksRequestHandler.showSuggestedArtworks(tagName);
+            }
+        };
+    }
+
+    private SuggestedArtworksRequestHandler.Callback getSuggestedArtworkCallback(
+            final Context context) {
+        return new SuggestedArtworksRequestHandler.Callback() {
+            @Override
+            public void onSuggestedArtworksImagesFetched(
+                    List<Artwork> suggestedArtworks) {
+                CenterLockHorizontalScrollviewAdapter adapter =
+                        new CenterLockHorizontalScrollviewAdapter(
+                                context,
+                                R.layout.suggested_artworks_square_image_view,
+                                suggestedArtworks);
+                mSuggestedArtworksScrollview.setAdapter(adapter);
+                mSuggestedArtworksScrollview.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onSuggestedArtworksImagesFetchedFailed() {
+                mSuggestedArtworksScrollview.setVisibility(View.GONE);
+            }
+        };
     }
 
 }

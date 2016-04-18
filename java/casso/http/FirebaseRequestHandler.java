@@ -54,6 +54,26 @@ public class FirebaseRequestHandler {
         tagsReference.child(encodedString).setValue(tag.mIdsWithThisTag);
     }
 
+    public void getIdsForTag(String tagName) {
+        mFirebase.child(TAGS).child(tagName).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                List<Integer> idsList = snapshot.getValue(mGenericTypeIndicator);
+                ((GetIdsForTagCallback) mCallback).onIdsFetched(idsList);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError error) {
+                ((GetIdsForTagCallback) mCallback).onIdsFetchedFailed();
+            }
+        });
+    }
+
+    public interface GetIdsForTagCallback extends Callback {
+        public void onIdsFetched(List<Integer> ids);
+        public void onIdsFetchedFailed();
+    }
+
     public interface GetObjectIdsCallback extends Callback {
         public void onObjectIdsFetched(List<Integer> objectIdsList);
         public void onObjectIdsFetchFailed();

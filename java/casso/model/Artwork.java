@@ -4,7 +4,10 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import casso.util.StringUtil;
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +18,8 @@ public class Artwork implements Parcelable {
     public final String mTitle;
     public final String mArtist;
     public final @Nullable String mYear;
-    public final @Nullable String mImageUrl;
+    public final @Nullable String mHighResImageUrl;
+    public final @Nullable String mLowResImageUrl;
     public final @Nullable Bitmap mImageBitmap;
     public final @Nullable String mCategory;
     public final @Nullable List<String> mObjectTypes;
@@ -27,14 +31,14 @@ public class Artwork implements Parcelable {
     public final @Nullable String mCurator;
     public final @Nullable String mCuratorialComment;
     public final @Nullable List<Tag> mTags;
-    public final @Nullable List<Artwork> mSuggestedArtworks;
 
     private Artwork(
             Integer id,
             String title,
             String artist,
             @Nullable String year,
-            @Nullable String imageUrl,
+            @Nullable String highResImageUrl,
+            @Nullable String lowResImageUrl,
             @Nullable Bitmap imageBitmap,
             @Nullable String category,
             @Nullable List<String> objectTypes,
@@ -45,14 +49,14 @@ public class Artwork implements Parcelable {
             @Nullable List<String> materials,
             @Nullable String curator,
             @Nullable String curatorialComment,
-            @Nullable List<Tag> tags,
-            @Nullable List<Artwork> suggestedArtworks) {
+            @Nullable List<Tag> tags) {
         Preconditions.checkArgument(id != null && title != null && artist != null);
         mId = id;
         mTitle = title;
         mArtist = artist;
         mYear = year;
-        mImageUrl = imageUrl;
+        mHighResImageUrl = highResImageUrl;
+        mLowResImageUrl = lowResImageUrl;
         mImageBitmap = imageBitmap;
         mCategory = category;
         mObjectTypes = objectTypes;
@@ -64,7 +68,15 @@ public class Artwork implements Parcelable {
         mCurator = curator;
         mCuratorialComment = curatorialComment;
         mTags = tags;
-        mSuggestedArtworks = suggestedArtworks;
+    }
+
+    public String getTagsAsOneString() {
+        if (mTags != null) {
+            List<String> tagNames = Lists.transform(mTags, StringUtil.tagsToTagStrings);
+            return Joiner.on(" ").join(tagNames);
+        } else {
+            return null;
+        }
     }
 
     public String getYearRange() {
@@ -86,7 +98,8 @@ public class Artwork implements Parcelable {
         private String mTitle;
         private String mArtist;
         private @Nullable String mYear;
-        private @Nullable String mImageUrl;
+        private @Nullable String mHighResImageUrl;
+        private @Nullable String mLowResImageUrl;
         private @Nullable Bitmap mImageBitmap;
         private @Nullable String mCategory;
         private @Nullable List<String> mObjectTypes;
@@ -98,7 +111,6 @@ public class Artwork implements Parcelable {
         private @Nullable String mCurator;
         private @Nullable String mCuratorialComment;
         private @Nullable List<Tag> mTags;
-        private @Nullable List<Artwork> mSuggestedArtworks;
 
         public Builder setId(Integer id) {
             mId = id;
@@ -120,8 +132,13 @@ public class Artwork implements Parcelable {
             return this;
         }
 
-        public Builder setImageUrl(String imageUrl) {
-            mImageUrl = imageUrl;
+        public Builder setHighResImageUrl(String highResImageUrl) {
+            mHighResImageUrl = highResImageUrl;
+            return this;
+        }
+
+        public Builder setLowResImageUrl(String lowResImageUrl) {
+            mLowResImageUrl = lowResImageUrl;
             return this;
         }
 
@@ -180,17 +197,13 @@ public class Artwork implements Parcelable {
             return this;
         }
 
-        public Builder setSuggestedArtworks(List<Artwork> suggestedArtworks) {
-            mSuggestedArtworks = suggestedArtworks;
-            return this;
-        }
-
         public Builder fromOld(Artwork oldArtwork) {
             mId = oldArtwork.mId;
             mTitle = oldArtwork.mTitle;
             mArtist = oldArtwork.mArtist;
             mYear = oldArtwork.mYear;
-            mImageUrl = oldArtwork.mImageUrl;
+            mHighResImageUrl = oldArtwork.mHighResImageUrl;
+            mLowResImageUrl = oldArtwork.mLowResImageUrl;
             mImageBitmap = oldArtwork.mImageBitmap;
             mCategory = oldArtwork.mCategory;
             mObjectTypes = oldArtwork.mObjectTypes;
@@ -202,7 +215,6 @@ public class Artwork implements Parcelable {
             mCurator = oldArtwork.mCurator;
             mCuratorialComment = oldArtwork.mCuratorialComment;
             mTags = oldArtwork.mTags;
-            mSuggestedArtworks = oldArtwork.mSuggestedArtworks;
             return this;
         }
 
@@ -212,7 +224,8 @@ public class Artwork implements Parcelable {
                     mTitle,
                     mArtist,
                     mYear,
-                    mImageUrl,
+                    mHighResImageUrl,
+                    mLowResImageUrl,
                     mImageBitmap,
                     mCategory,
                     mObjectTypes,
@@ -223,8 +236,7 @@ public class Artwork implements Parcelable {
                     mMaterials,
                     mCurator,
                     mCuratorialComment,
-                    mTags,
-                    mSuggestedArtworks);
+                    mTags);
         }
     }
 
@@ -237,7 +249,8 @@ public class Artwork implements Parcelable {
         out.writeString(mTitle);
         out.writeString(mArtist);
         out.writeString(mYear);
-        out.writeString(mImageUrl);
+        out.writeString(mHighResImageUrl);
+        out.writeString(mLowResImageUrl);
         out.writeParcelable(mImageBitmap, flags);
         out.writeString(mCategory);
         out.writeList(mObjectTypes);
@@ -249,7 +262,6 @@ public class Artwork implements Parcelable {
         out.writeString(mCurator);
         out.writeString(mCuratorialComment);
         out.writeList(mTags);
-        out.writeList(mSuggestedArtworks);
     }
 
     public static final Parcelable.Creator<Artwork> CREATOR = new Parcelable.Creator<Artwork>() {
@@ -267,7 +279,8 @@ public class Artwork implements Parcelable {
         mTitle = in.readString();
         mArtist = in.readString();
         mYear = in.readString();
-        mImageUrl = in.readString();
+        mLowResImageUrl = in.readString();
+        mHighResImageUrl = in.readString();
         mImageBitmap = in.readParcelable(Bitmap.class.getClassLoader());
         mCategory = in.readString();
         mObjectTypes = new ArrayList<String>();
@@ -284,8 +297,6 @@ public class Artwork implements Parcelable {
         mCuratorialComment = in.readString();
         mTags = new ArrayList<Tag>();
         in.readList(mTags, Tag.class.getClassLoader());
-        mSuggestedArtworks = new ArrayList<Artwork>();
-        in.readList(mSuggestedArtworks, Artwork.class.getClassLoader());
     }
 
 }
