@@ -32,7 +32,7 @@ import java.util.List;
 
 public class ArtworkProfileActivity extends FragmentActivity implements
         DownloadImageAsyncTask.Callback,
-        FirebaseRequestHandler.Callback,
+        FirebaseRequestHandler.GetObjectIdsCallback,
         YCBARequestHandler.Callback {
 
     private FirebaseRequestHandler mFirebaseRequestHandler;
