@@ -18,12 +18,16 @@ public class DownloadImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
 
     protected Bitmap doInBackground(String... urls) {
         String url = urls[0];
-        try {
-            InputStream inputStream = new URL(url).openStream();
-            return BitmapFactory.decodeStream(inputStream);
-        } catch (Exception e) {
-            Log.e("Error", e.getMessage());
-            e.printStackTrace();
+        if (url != null) {
+            try {
+                InputStream inputStream = new URL(url).openStream();
+                return BitmapFactory.decodeStream(inputStream);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
+        } else {
             return null;
         }
     }
