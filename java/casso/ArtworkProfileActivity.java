@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -102,6 +103,8 @@ public class ArtworkProfileActivity extends FragmentActivity implements
                         new DownloadImageAsyncTask(getCallback(position));
                 downloadImageAsyncTask.execute(mArtwork.mSuggestedArtworks.get(position).mImageUrl);
             }
+        } else {
+            mSuggestedArtworks.setVisibility(View.GONE);
         }
     }
 
@@ -127,11 +130,15 @@ public class ArtworkProfileActivity extends FragmentActivity implements
     }
 
     private void renderSuggestedArtworks() {
-        CenterLockHorizontalScrollviewAdapter adapter = new CenterLockHorizontalScrollviewAdapter(
-                this,
-                R.layout.suggested_artworks_square_image_view,
-                mArtwork.mSuggestedArtworks);
-        mSuggestedArtworks.setAdapter(adapter);
+        if (mArtwork.mSuggestedArtworks != null && mArtwork.mSuggestedArtworks.size() > 0) {
+            CenterLockHorizontalScrollviewAdapter adapter = new CenterLockHorizontalScrollviewAdapter(
+                    this,
+                    R.layout.suggested_artworks_square_image_view,
+                    mArtwork.mSuggestedArtworks);
+            mSuggestedArtworks.setAdapter(adapter);
+        } else {
+            mSuggestedArtworks.setVisibility(View.GONE);
+        }
     }
 
     @Override
