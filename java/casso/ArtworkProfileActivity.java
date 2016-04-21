@@ -11,7 +11,6 @@ import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import casso.http.FirebaseRequestHandler;
@@ -23,6 +22,7 @@ import casso.util.XmlUtil;
 import casso.widget.CenterLockHorizontalScrollview;
 import casso.widget.CenterLockHorizontalScrollviewAdapter;
 
+import casso.widget.ImageViewAndLoadingScreen;
 import com.casso.R;
 
 import com.google.common.base.Preconditions;
@@ -45,7 +45,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
     private final String mObjectId = "109";
     private Artwork mArtwork;
 
-    private ImageView mImage;
+    private ImageViewAndLoadingScreen mImageViewAndLoadingScreen;
     private TextView mTitle;
     private TextView mArtist;
     private TextView mYear;
@@ -65,7 +65,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
     private void init() {
         mYCBARequestHandler = new YCBARequestHandler(this, mObjectId, this);
 
-        mImage = (ImageView) findViewById(R.id.artwork_profile_image);
+        mImageViewAndLoadingScreen = (ImageViewAndLoadingScreen) findViewById(R.id.artwork_profile_image);
         mTitle = (TextView) findViewById(R.id.artwork_profile_title);
         mArtist = (TextView) findViewById(R.id.artwork_profile_artist);
         mYear = (TextView) findViewById(R.id.artwork_profile_year);
@@ -92,7 +92,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
     @Override
     public void onBitmapFetched(Bitmap bitmap) {
         if (bitmap != null) {
-            mImage.setImageBitmap(bitmap);
+            mImageViewAndLoadingScreen.setImageView(bitmap);
         } else {
             Log.e("ArtworkProfileActivity", "bitmap could not be fetched");
         }
