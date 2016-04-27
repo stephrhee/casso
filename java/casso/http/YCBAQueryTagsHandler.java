@@ -1,4 +1,4 @@
-package casso.query;
+package casso.http;
 
 import android.content.Context;
 import android.util.Log;
