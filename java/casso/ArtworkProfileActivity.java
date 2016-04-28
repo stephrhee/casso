@@ -1,6 +1,5 @@
 package casso;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -62,6 +61,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
     private CenterLockHorizontalScrollviewAdapter mSuggestedArtworksAdapter;
     private List<Bitmap> mSuggestedArtworksBitmaps = new ArrayList<>();
     private String mLastClickedEncodedTagName;
+    private List<DownloadImageAsyncTask> mPendingSuggestedArtworkBitmapsDownloadTasks;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -197,6 +197,8 @@ public class ArtworkProfileActivity extends FragmentActivity implements
 
                 } else {
                     mLastClickedEncodedTagName = encodedTagName;
+                    cancelPendingSuggestedArtworkBitmapDownloadTasks();
+
                     List<SimpleTag.SimpleArtwork> suggestedArtworks =
                             suggestedArtworksHashMap.get(encodedTagName).suggestedArtworks;
                     showSuggestedArtworksPlaceholder(suggestedArtworks);
@@ -204,11 +206,21 @@ public class ArtworkProfileActivity extends FragmentActivity implements
                         DownloadImageAsyncTask downloadImageAsyncTask = new DownloadImageAsyncTask(
                                 getDownloadSuggestedArtworkImageCallback(position),
                                 encodedTagName);
+                        mPendingSuggestedArtworkBitmapsDownloadTasks.add(downloadImageAsyncTask);
                         downloadImageAsyncTask.execute(suggestedArtworks.get(position).thumbUrl);
                     }
                 }
             }
         };
+    }
+
+    private void cancelPendingSuggestedArtworkBitmapDownloadTasks() {
+        if (mPendingSuggestedArtworkBitmapsDownloadTasks != null) {
+            for (DownloadImageAsyncTask task : mPendingSuggestedArtworkBitmapsDownloadTasks) {
+                task.cancel(true);
+            }
+        }
+        mPendingSuggestedArtworkBitmapsDownloadTasks = new ArrayList<>();
     }
 
     private DownloadImageAsyncTask.Callback getDownloadSuggestedArtworkImageCallback (final int position) {
