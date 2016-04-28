@@ -26,8 +26,8 @@ import casso.util.StringUtil;
 import casso.util.XmlUtil;
 import casso.widget.CenterLockHorizontalScrollview;
 import casso.widget.CenterLockHorizontalScrollviewAdapter;
-
 import casso.widget.ImageViewAndLoadingScreen;
+
 import com.casso.R;
 
 import com.google.common.base.Preconditions;
@@ -38,6 +38,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -153,16 +154,19 @@ public class ArtworkProfileActivity extends FragmentActivity implements
     private SpannableString getSpannableStringOfTags() {
         Preconditions.checkNotNull(mArtwork.mTags);
         SpannableString spannableString = new SpannableString(mArtwork.getTagsAsOneString());
+        HashMap<String, SimpleTag> suggestedArtworksHashMap =
+                ((OnStartFetchHandler) this.getApplication()).getSuggestedArtworkHashMap();
         int startIndex = 0;
         for (Tag tag : mArtwork.mTags) {
             String tagName = tag.mName;
-            ClickableSpan clickableSpan = getClickableSpan(this, tagName);
+            String encodedTagName = StringUtil.getEncodedFirebasePath(tagName);
+            ClickableSpan clickableSpan = getClickableSpan(this, encodedTagName, suggestedArtworksHashMap);
             spannableString.setSpan(
                     clickableSpan,
                     startIndex,
                     startIndex + tagName.length(),
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            ForegroundColorSpan foregroundColorSpan = getForegroundColorSpan(tagName);
+            ForegroundColorSpan foregroundColorSpan = getForegroundColorSpan(encodedTagName, suggestedArtworksHashMap);
             spannableString.setSpan(
                     foregroundColorSpan,
                     startIndex,
@@ -173,23 +177,30 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         return spannableString;
     }
 
-    private ClickableSpan getClickableSpan(final Context context, final String tagName) {
+    private ClickableSpan getClickableSpan(
+            final Context context,
+            final String encodedTagName,
+            final HashMap<String, SimpleTag> suggestedArtworksHashMap) {
         return new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                SuggestedArtworksRequestHandler suggestedArtworksRequestHandler =
-                        new SuggestedArtworksRequestHandler(
-                                context,
-                                getSuggestedArtworkCallback(context));
-                suggestedArtworksRequestHandler.showSuggestedArtworks(tagName);
+                if (suggestedArtworksHashMap != null && suggestedArtworksHashMap.get(encodedTagName) != null) {
+                    showSuggestedArtworksPlaceholder(
+                            suggestedArtworksHashMap.get(encodedTagName).suggestedArtworks);
+//                    SuggestedArtworksRequestHandler suggestedArtworksRequestHandler =
+//                            new SuggestedArtworksRequestHandler(
+//                                    context,
+//                                    getSuggestedArtworkCallback(context));
+//                    suggestedArtworksRequestHandler.showSuggestedArtworks(tagName);
+                } else {
+                }
             }
         };
     }
 
-    private ForegroundColorSpan getForegroundColorSpan(final String tagName) {
-        HashMap<String, SimpleTag> suggestedArtworksHashMap =
-                ((OnStartFetchHandler) this.getApplication()).getSuggestedArtworkHashMap();
-        String encodedTagName = StringUtil.getEncodedFirebasePath(tagName);
+    private ForegroundColorSpan getForegroundColorSpan(
+            String encodedTagName,
+            HashMap<String, SimpleTag> suggestedArtworksHashMap) {
         if (encodedTagName != null && suggestedArtworksHashMap != null
                 && suggestedArtworksHashMap.get(encodedTagName) != null
                 && suggestedArtworksHashMap.get(encodedTagName).suggestedArtworks != null) {
@@ -208,6 +219,20 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         } else {
             return null;
         }
+    }
+
+    private void showSuggestedArtworksPlaceholder(List<SimpleTag.SimpleArtwork> suggestedArtworks) {
+        List<Artwork> dummyArtworkList = new ArrayList<>();
+        for (SimpleTag.SimpleArtwork simpleArtwork : suggestedArtworks) {
+            dummyArtworkList.add(null);
+        }
+        CenterLockHorizontalScrollviewAdapter adapter =
+                new CenterLockHorizontalScrollviewAdapter(
+                        this,
+                        R.layout.suggested_artworks_square_image_view,
+                        dummyArtworkList);
+        mSuggestedArtworksScrollview.setAdapter(adapter);
+        mSuggestedArtworksScrollview.setVisibility(View.VISIBLE);
     }
 
     private SuggestedArtworksRequestHandler.Callback getSuggestedArtworkCallback(

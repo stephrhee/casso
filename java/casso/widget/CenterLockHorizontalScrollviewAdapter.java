@@ -50,7 +50,13 @@ public class CenterLockHorizontalScrollviewAdapter extends ArrayAdapter<Artwork>
         } else {
             holder = (Holder) imageView.getTag();
         }
-        holder.squareImageView.setImageBitmap(mArtworks.get(position).mImageBitmap);
+
+        /**
+         * Not a placeholder. Has a real image.
+         */
+        if (mArtworks.get(position) != null) {
+            holder.squareImageView.setImageBitmap(mArtworks.get(position).mImageBitmap);
+        }
 
         return imageView;
     }
