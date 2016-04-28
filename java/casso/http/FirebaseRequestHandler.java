@@ -6,6 +6,7 @@ import casso.util.StringUtil;
 import com.firebase.client.*;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class FirebaseRequestHandler {
@@ -48,10 +49,12 @@ public class FirebaseRequestHandler {
         });
     }
 
-    public void setTagAndListOfIds(Tag tag) {
-        Firebase tagsReference = mFirebase.child(TAGS);
+    public void setTagAndListOfIds(Tag tag, HashMap<Integer, String> idToThumbUrlHashMap) {
         String encodedString = StringUtil.getEncodedFirebasePath(tag.mName);
-        tagsReference.child(encodedString).setValue(tag.mIdsWithThisTag);
+        for (Integer id : tag.mIdsWithThisTag) {
+            List<String> idAndUrl = Arrays.asList(id.toString(), idToThumbUrlHashMap.get(id));
+            mFirebase.child(TAGS).child(encodedString).push().setValue(idAndUrl);
+        }
     }
 
     public void getIdsForTag(String tagName) {
