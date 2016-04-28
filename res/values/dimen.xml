@@ -23,4 +23,6 @@
 
     <dimen name="artwork_profile_circular_progress_view_size">50dp</dimen>
 
+    <dimen name="suggested_artworks_dim">100dp</dimen>
+
 </resources>

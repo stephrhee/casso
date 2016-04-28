@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <casso.widget.SquareImageView
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop" />
+        android:layout_width="@dimen/suggested_artworks_dim"
+        android:layout_height="@dimen/suggested_artworks_dim"
+        android:scaleType="centerCrop"
+        android:background="@color/blue_grey_50"
+        android:layout_margin="1dp" />
