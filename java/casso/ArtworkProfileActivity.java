@@ -249,14 +249,14 @@ public class ArtworkProfileActivity extends FragmentActivity implements
             List<SimpleTag.SimpleArtwork> suggestedArtworks =
                     suggestedArtworksHashMap.get(encodedTagName).suggestedArtworks;
             int suggestedArtworksCount = suggestedArtworks.size();
-            if (suggestedArtworksCount < 5) {
-                return new ForegroundColorSpan(Color.BLUE);
-            } else if (suggestedArtworksCount < 10) {
-                return new ForegroundColorSpan(Color.GREEN);
-            } else if (suggestedArtworksCount < 20) {
-                return new ForegroundColorSpan(Color.RED);
+            if (suggestedArtworksCount < 3) {
+                return new ForegroundColorSpan(getResources().getColor(R.color.red_500));
+            } else if (suggestedArtworksCount < 25) {
+                return new ForegroundColorSpan(getResources().getColor(R.color.amber_500));
+            } else if (suggestedArtworksCount < 50) {
+                return new ForegroundColorSpan(getResources().getColor(R.color.green_500));
             } else {
-                return new ForegroundColorSpan(Color.YELLOW);
+                return new ForegroundColorSpan(getResources().getColor(R.color.blue_500));
             }
         } else {
             return null;
