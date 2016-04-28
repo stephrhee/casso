@@ -9,21 +9,30 @@ import java.util.HashMap;
 /**
  * Created by stephrhee on 4/27/16.
  */
+
 public class OnStartFetchHandler {
 
-    public static void fetch(Context context) {
+    public HashMap<String, SimpleTag> mSuggestedArtworksHashMap;
+
+    private Context mContext;
+
+    public OnStartFetchHandler(Context context) {
+        mContext = context;
+    }
+
+    public void fetch() {
 
         /**
          * Fetch list of all tags and their suggested artworks' ids and thumb image urls
          */
         FirebaseRequestHandler getSuggestedArtworksRequestHandler = new FirebaseRequestHandler(
-                context,
+                mContext,
                 FirebaseRequestHandler.DATA_URL,
                 new FirebaseRequestHandler.GetSuggestedArtworksCallback() {
                     @Override
                     public void onSuggestedArtworksFetched(
                             HashMap<String, SimpleTag> encodedStringToSimpleTagHashMap) {
-                        Log.d("STEPH", encodedStringToSimpleTagHashMap.size() + " ");
+                        mSuggestedArtworksHashMap = encodedStringToSimpleTagHashMap;
                     }
 
                     @Override

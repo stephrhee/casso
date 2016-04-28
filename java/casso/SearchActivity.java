@@ -36,7 +36,8 @@ public class SearchActivity extends FragmentActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.search_layout);
 
-        OnStartFetchHandler.fetch(this);
+        OnStartFetchHandler onStartFetchHandler = new OnStartFetchHandler(this);
+        onStartFetchHandler.fetch();
 
         init();
     }
