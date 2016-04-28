@@ -76,7 +76,7 @@
         <casso.widget.CenterLockHorizontalScrollview
                 android:id="@+id/suggested_artworks_scrollview"
                 android:layout_width="match_parent"
-                android:layout_height="100dp" >
+                android:layout_height="@dimen/suggested_artworks_dim" >
 
             <LinearLayout
                     android:id="@+id/suggested_artworks_scrollview_linear_layout"
