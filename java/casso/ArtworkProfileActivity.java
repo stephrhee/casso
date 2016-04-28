@@ -170,7 +170,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         for (Tag tag : mArtwork.mTags) {
             String tagName = tag.mName;
             String encodedTagName = StringUtil.getEncodedFirebasePath(tagName);
-            ClickableSpan clickableSpan = getClickableSpan(this, encodedTagName, suggestedArtworksHashMap);
+            ClickableSpan clickableSpan = getClickableSpan(encodedTagName, suggestedArtworksHashMap);
             spannableString.setSpan(
                     clickableSpan,
                     startIndex,
@@ -188,7 +188,6 @@ public class ArtworkProfileActivity extends FragmentActivity implements
     }
 
     private ClickableSpan getClickableSpan(
-            final Context context,
             final String encodedTagName,
             final HashMap<String, SimpleTag> suggestedArtworksHashMap) {
         return new ClickableSpan() {
