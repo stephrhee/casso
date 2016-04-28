@@ -70,8 +70,8 @@ public class FirebaseRequestHandler {
         mFirebase.child(TAGS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                HashMap<String, SimpleTag> encodedStringToSimpleTagHashMap = snapshot.getValue(mGenericTypeIndicatorSimpleTags);
-                ((GetSuggestedArtworksCallback) mCallback).onSuggestedArtworksFetched(encodedStringToSimpleTagHashMap);
+                HashMap<String, SimpleTag> firebaseKeyToSimpleTagHashMap = snapshot.getValue(mGenericTypeIndicatorSimpleTags);
+                ((GetSuggestedArtworksCallback) mCallback).onSuggestedArtworksFetched(firebaseKeyToSimpleTagHashMap);
             }
 
             @Override
@@ -97,7 +97,7 @@ public class FirebaseRequestHandler {
     }
 
     public interface GetSuggestedArtworksCallback extends Callback {
-        public void onSuggestedArtworksFetched(HashMap<String, SimpleTag> encodedStringToSimpleTagHashMap);
+        public void onSuggestedArtworksFetched(HashMap<String, SimpleTag> firebaseKeyToSimpleTagHashMap);
         public void onSuggestedArtworksFetchFailed();
     }
 

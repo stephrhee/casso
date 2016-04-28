@@ -2,22 +2,27 @@ package casso;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
 import casso.http.FirebaseRequestHandler;
+import casso.http.OnStartFetchHandler;
 import casso.http.SuggestedArtworksRequestHandler;
 import casso.http.YCBARequestHandler;
 import casso.model.Artwork;
+import casso.model.SimpleTag;
 import casso.model.Tag;
+import casso.util.StringUtil;
 import casso.util.XmlUtil;
 import casso.widget.CenterLockHorizontalScrollview;
 import casso.widget.CenterLockHorizontalScrollviewAdapter;
@@ -33,6 +38,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 
 public class ArtworkProfileActivity extends FragmentActivity implements
@@ -156,6 +162,12 @@ public class ArtworkProfileActivity extends FragmentActivity implements
                     startIndex,
                     startIndex + tagName.length(),
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ForegroundColorSpan foregroundColorSpan = getForegroundColorSpan(tagName);
+            spannableString.setSpan(
+                    foregroundColorSpan,
+                    startIndex,
+                    startIndex + tagName.length(),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             startIndex += tagName.length() + 1;
         }
         return spannableString;
@@ -172,6 +184,30 @@ public class ArtworkProfileActivity extends FragmentActivity implements
                 suggestedArtworksRequestHandler.showSuggestedArtworks(tagName);
             }
         };
+    }
+
+    private ForegroundColorSpan getForegroundColorSpan(final String tagName) {
+        HashMap<String, SimpleTag> suggestedArtworksHashMap =
+                ((OnStartFetchHandler) this.getApplication()).getSuggestedArtworkHashMap();
+        String encodedTagName = StringUtil.getEncodedFirebasePath(tagName);
+        if (encodedTagName != null && suggestedArtworksHashMap != null
+                && suggestedArtworksHashMap.get(encodedTagName) != null
+                && suggestedArtworksHashMap.get(encodedTagName).suggestedArtworks != null) {
+            List<SimpleTag.SimpleArtwork> suggestedArtworks =
+                    suggestedArtworksHashMap.get(encodedTagName).suggestedArtworks;
+            int suggestedArtworksCount = suggestedArtworks.size();
+            if (suggestedArtworksCount < 5) {
+                return new ForegroundColorSpan(Color.BLUE);
+            } else if (suggestedArtworksCount < 10) {
+                return new ForegroundColorSpan(Color.GREEN);
+            } else if (suggestedArtworksCount < 20) {
+                return new ForegroundColorSpan(Color.RED);
+            } else {
+                return new ForegroundColorSpan(Color.YELLOW);
+            }
+        } else {
+            return null;
+        }
     }
 
     private SuggestedArtworksRequestHandler.Callback getSuggestedArtworkCallback(
