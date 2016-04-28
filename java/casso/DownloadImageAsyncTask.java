@@ -3,6 +3,7 @@ package casso;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.InputStream;
@@ -11,9 +12,15 @@ import java.net.URL;
 public class DownloadImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
 
     private Callback mCallback;
+    @Nullable private String mEncodedTagName;
 
     public DownloadImageAsyncTask(Callback callback) {
+        this(callback, null);
+    }
+
+    public DownloadImageAsyncTask(Callback callback, @Nullable String encodedTagName) {
         mCallback = callback;
+        mEncodedTagName = encodedTagName;
     }
 
     protected Bitmap doInBackground(String... urls) {
@@ -33,11 +40,11 @@ public class DownloadImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
     }
 
     protected void onPostExecute(Bitmap bitmap) {
-        mCallback.onBitmapFetched(bitmap);
+        mCallback.onBitmapFetched(bitmap, mEncodedTagName);
     }
 
     public interface Callback {
-        public void onBitmapFetched(Bitmap bitmap);
+        public void onBitmapFetched(Bitmap bitmap, @Nullable String encodedTagName);
     }
 
 }

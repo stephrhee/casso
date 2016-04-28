@@ -2,6 +2,7 @@ package casso.http;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import casso.DownloadImageAsyncTask;
@@ -104,7 +105,7 @@ public class SuggestedArtworksRequestHandler {
     private DownloadImageAsyncTask.Callback getDownloadImageCallback(final int position) {
         return new DownloadImageAsyncTask.Callback() {
             @Override
-            public void onBitmapFetched(Bitmap bitmap) {
+            public void onBitmapFetched(Bitmap bitmap, @Nullable String encodedTagName) {
                 if (bitmap != null) {
                     Artwork oldArtwork = mSuggestedArtworks.get(position);
                     Artwork newArtwork = new Artwork.Builder()

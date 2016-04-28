@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -60,6 +61,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
 
     private CenterLockHorizontalScrollviewAdapter mSuggestedArtworksAdapter;
     private List<Bitmap> mSuggestedArtworksBitmaps = new ArrayList<>();
+    private String mLastClickedEncodedTagName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,7 +107,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
     }
 
     @Override
-    public void onBitmapFetched(Bitmap bitmap) {
+    public void onBitmapFetched(Bitmap bitmap, @Nullable String encodedTagName) {
         if (bitmap != null) {
             mImageViewAndLoadingScreen.setImageView(bitmap);
         } else {
@@ -195,12 +197,14 @@ public class ArtworkProfileActivity extends FragmentActivity implements
                 if (suggestedArtworksHashMap == null || suggestedArtworksHashMap.get(encodedTagName) == null) {
 
                 } else {
+                    mLastClickedEncodedTagName = encodedTagName;
                     List<SimpleTag.SimpleArtwork> suggestedArtworks =
                             suggestedArtworksHashMap.get(encodedTagName).suggestedArtworks;
                     showSuggestedArtworksPlaceholder(suggestedArtworks);
                     for (int position = 0; position < suggestedArtworks.size(); position++) {
                         DownloadImageAsyncTask downloadImageAsyncTask = new DownloadImageAsyncTask(
-                                getDownloadSuggestedArtworkImageCallback(position));
+                                getDownloadSuggestedArtworkImageCallback(position),
+                                encodedTagName);
                         downloadImageAsyncTask.execute(suggestedArtworks.get(position).thumbUrl);
                     }
                 }
@@ -211,9 +215,11 @@ public class ArtworkProfileActivity extends FragmentActivity implements
     private DownloadImageAsyncTask.Callback getDownloadSuggestedArtworkImageCallback (final int position) {
         return new DownloadImageAsyncTask.Callback() {
             @Override
-            public void onBitmapFetched(Bitmap bitmap) {
-                mSuggestedArtworksBitmaps.set(position, bitmap);
-                updateSuggestedArtworks();
+            public void onBitmapFetched(Bitmap bitmap, @Nullable String encodedTagName) {
+                if (encodedTagName != null && encodedTagName.equals(mLastClickedEncodedTagName)) {
+                    mSuggestedArtworksBitmaps.set(position, bitmap);
+                    updateSuggestedArtworks();
+                }
             }
         };
     }
