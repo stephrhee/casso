@@ -1,7 +1,6 @@
 package casso;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -85,7 +84,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
 
         mSuggestedArtworksAdapter = new CenterLockHorizontalScrollviewAdapter(
                 this,
-                R.layout.suggested_artworks_square_image_view,
+                R.layout.suggested_artwork_view,
                 mSuggestedArtworksBitmaps);
         mSuggestedArtworksScrollview.setAdapter(mSuggestedArtworksAdapter);
     }
