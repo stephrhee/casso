@@ -2,38 +2,43 @@ package casso.widget;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import casso.model.Artwork;
 
 import java.util.List;
 
-public class CenterLockHorizontalScrollviewAdapter extends ArrayAdapter<Artwork> {
+public class CenterLockHorizontalScrollviewAdapter extends ArrayAdapter<Bitmap> {
 
     private final Context mContext;
     private final int mRowViewResourceId;
-    private List<Artwork> mArtworks;
+    private List<Bitmap> mBitmaps;
 
     public CenterLockHorizontalScrollviewAdapter(
             Context context,
             int rowViewResourceId,
-            List<Artwork> artworks) {
-        super(context, rowViewResourceId, artworks);
+            List<Bitmap> bitmaps) {
+        super(context, rowViewResourceId, bitmaps);
         mContext = context;
         mRowViewResourceId = rowViewResourceId;
-        mArtworks = artworks;
+        mBitmaps = bitmaps;
+    }
+
+    public void updateBitmaps(List<Bitmap> bitmaps) {
+        mBitmaps = bitmaps;
+        notifyDataSetChanged();
     }
 
     @Override
-    public Artwork getItem(int position) {
-        return mArtworks.get(position);
+    public Bitmap getItem(int position) {
+        return mBitmaps.get(position);
     }
 
     @Override
     public int getCount() {
-        return mArtworks.size();
+        return mBitmaps.size();
     }
 
     @Override
@@ -54,8 +59,8 @@ public class CenterLockHorizontalScrollviewAdapter extends ArrayAdapter<Artwork>
         /**
          * Not a placeholder. Has a real image.
          */
-        if (mArtworks.get(position) != null) {
-            holder.squareImageView.setImageBitmap(mArtworks.get(position).mImageBitmap);
+        if (mBitmaps.get(position) != null) {
+            holder.squareImageView.setImageBitmap(mBitmaps.get(position));
         }
 
         return imageView;

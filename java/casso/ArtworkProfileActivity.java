@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import casso.http.FirebaseRequestHandler;
 import casso.http.OnStartFetchHandler;
-import casso.http.SuggestedArtworksRequestHandler;
 import casso.http.YCBARequestHandler;
 import casso.model.Artwork;
 import casso.model.SimpleTag;
@@ -59,6 +58,9 @@ public class ArtworkProfileActivity extends FragmentActivity implements
     private TextView mTags;
     private CenterLockHorizontalScrollview mSuggestedArtworksScrollview;
 
+    private CenterLockHorizontalScrollviewAdapter mSuggestedArtworksAdapter;
+    private List<Bitmap> mSuggestedArtworksBitmaps = new ArrayList<>();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +80,12 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         mYear = (TextView) findViewById(R.id.artwork_profile_year);
         mTags = (TextView) findViewById(R.id.artwork_profile_tags);
         mSuggestedArtworksScrollview = (CenterLockHorizontalScrollview) findViewById(R.id.suggested_artworks_scrollview);
+
+        mSuggestedArtworksAdapter = new CenterLockHorizontalScrollviewAdapter(
+                this,
+                R.layout.suggested_artworks_square_image_view,
+                mSuggestedArtworksBitmaps);
+        mSuggestedArtworksScrollview.setAdapter(mSuggestedArtworksAdapter);
     }
 
     private void setViews() {
@@ -184,18 +192,35 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         return new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                if (suggestedArtworksHashMap != null && suggestedArtworksHashMap.get(encodedTagName) != null) {
-                    showSuggestedArtworksPlaceholder(
-                            suggestedArtworksHashMap.get(encodedTagName).suggestedArtworks);
-//                    SuggestedArtworksRequestHandler suggestedArtworksRequestHandler =
-//                            new SuggestedArtworksRequestHandler(
-//                                    context,
-//                                    getSuggestedArtworkCallback(context));
-//                    suggestedArtworksRequestHandler.showSuggestedArtworks(tagName);
+                if (suggestedArtworksHashMap == null || suggestedArtworksHashMap.get(encodedTagName) == null) {
+
                 } else {
+                    List<SimpleTag.SimpleArtwork> suggestedArtworks =
+                            suggestedArtworksHashMap.get(encodedTagName).suggestedArtworks;
+                    showSuggestedArtworksPlaceholder(suggestedArtworks);
+                    for (int position = 0; position < suggestedArtworks.size(); position++) {
+                        DownloadImageAsyncTask downloadImageAsyncTask = new DownloadImageAsyncTask(
+                                getDownloadSuggestedArtworkImageCallback(position));
+                        downloadImageAsyncTask.execute(suggestedArtworks.get(position).thumbUrl);
+                    }
                 }
             }
         };
+    }
+
+    private DownloadImageAsyncTask.Callback getDownloadSuggestedArtworkImageCallback (final int position) {
+        return new DownloadImageAsyncTask.Callback() {
+            @Override
+            public void onBitmapFetched(Bitmap bitmap) {
+                mSuggestedArtworksBitmaps.set(position, bitmap);
+                updateSuggestedArtworks();
+            }
+        };
+    }
+
+    private void updateSuggestedArtworks() {
+        mSuggestedArtworksAdapter.updateBitmaps(mSuggestedArtworksBitmaps);
+        mSuggestedArtworksScrollview.setAdapter(mSuggestedArtworksAdapter);
     }
 
     private ForegroundColorSpan getForegroundColorSpan(
@@ -222,39 +247,13 @@ public class ArtworkProfileActivity extends FragmentActivity implements
     }
 
     private void showSuggestedArtworksPlaceholder(List<SimpleTag.SimpleArtwork> suggestedArtworks) {
-        List<Artwork> dummyArtworkList = new ArrayList<>();
+        List<Bitmap> dummySuggestedArtworksBitmaps = new ArrayList<>();
         for (SimpleTag.SimpleArtwork simpleArtwork : suggestedArtworks) {
-            dummyArtworkList.add(null);
+            dummySuggestedArtworksBitmaps.add(null);
         }
-        CenterLockHorizontalScrollviewAdapter adapter =
-                new CenterLockHorizontalScrollviewAdapter(
-                        this,
-                        R.layout.suggested_artworks_square_image_view,
-                        dummyArtworkList);
-        mSuggestedArtworksScrollview.setAdapter(adapter);
+        mSuggestedArtworksBitmaps = dummySuggestedArtworksBitmaps;
+        updateSuggestedArtworks();
         mSuggestedArtworksScrollview.setVisibility(View.VISIBLE);
-    }
-
-    private SuggestedArtworksRequestHandler.Callback getSuggestedArtworkCallback(
-            final Context context) {
-        return new SuggestedArtworksRequestHandler.Callback() {
-            @Override
-            public void onSuggestedArtworksImagesFetched(
-                    List<Artwork> suggestedArtworks) {
-                CenterLockHorizontalScrollviewAdapter adapter =
-                        new CenterLockHorizontalScrollviewAdapter(
-                                context,
-                                R.layout.suggested_artworks_square_image_view,
-                                suggestedArtworks);
-                mSuggestedArtworksScrollview.setAdapter(adapter);
-                mSuggestedArtworksScrollview.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onSuggestedArtworksImagesFetchedFailed() {
-                mSuggestedArtworksScrollview.setVisibility(View.GONE);
-            }
-        };
     }
 
 }
