@@ -1,13 +1,12 @@
 package casso.http;
 
 import android.content.Context;
+import casso.model.SimpleTag;
 import casso.model.Tag;
 import casso.util.StringUtil;
 import com.firebase.client.*;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class FirebaseRequestHandler {
 
@@ -18,8 +17,12 @@ public class FirebaseRequestHandler {
     private final String OBJECT_IDS_JSON_FIELD = "object_ids";
     private final String TAGS = "tags";
 
-    private final GenericTypeIndicator<List<Integer>> mGenericTypeIndicator =
+    private final GenericTypeIndicator<List<Integer>> mGenericTypeIndicatorInteger =
             new GenericTypeIndicator<List<Integer>>() {
+            };
+
+    private final GenericTypeIndicator<HashMap<String, SimpleTag>> mGenericTypeIndicatorSimpleTags =
+            new GenericTypeIndicator<HashMap<String, SimpleTag>>() {
             };
 
     private Firebase mFirebase;
@@ -39,7 +42,7 @@ public class FirebaseRequestHandler {
         mFirebase.child(OBJECT_IDS_JSON_FIELD).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                List<Integer> objectIdsList = snapshot.getValue(mGenericTypeIndicator);
+                List<Integer> objectIdsList = snapshot.getValue(mGenericTypeIndicatorInteger);
                 ((GetObjectIdsCallback)mCallback).onObjectIdsFetched(objectIdsList);
             }
             @Override
@@ -51,17 +54,38 @@ public class FirebaseRequestHandler {
 
     public void setTagAndListOfIds(Tag tag, HashMap<Integer, String> idToThumbUrlHashMap) {
         String encodedString = StringUtil.getEncodedFirebasePath(tag.mName);
+        List<SimpleTag.SimpleArtwork> suggestedArtworks = new ArrayList<>();
         for (Integer id : tag.mIdsWithThisTag) {
             List<String> idAndUrl = Arrays.asList(id.toString(), idToThumbUrlHashMap.get(id));
-            mFirebase.child(TAGS).child(encodedString).push().setValue(idAndUrl);
+            SimpleTag.SimpleArtwork simpleArtwork = new SimpleTag.SimpleArtwork(
+                    id,
+                    idToThumbUrlHashMap.get(id));
+            suggestedArtworks.add(simpleArtwork);
         }
+        SimpleTag simpleTag = new SimpleTag(encodedString, suggestedArtworks);
+        mFirebase.child(TAGS).push().setValue(simpleTag);
+    }
+
+    public void getSuggestedArtworks() {
+        mFirebase.child(TAGS).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                HashMap<String, SimpleTag> encodedStringToSimpleTagHashMap = snapshot.getValue(mGenericTypeIndicatorSimpleTags);
+                ((GetSuggestedArtworksCallback) mCallback).onSuggestedArtworksFetched(encodedStringToSimpleTagHashMap);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError error) {
+                ((GetSuggestedArtworksCallback) mCallback).onSuggestedArtworksFetchFailed();
+            }
+        });
     }
 
     public void getIdsForTag(String tagName) {
         mFirebase.child(TAGS).child(tagName).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                List<Integer> idsList = snapshot.getValue(mGenericTypeIndicator);
+                List<Integer> idsList = snapshot.getValue(mGenericTypeIndicatorInteger);
                 ((GetIdsForTagCallback) mCallback).onIdsFetched(idsList);
             }
 
@@ -70,6 +94,11 @@ public class FirebaseRequestHandler {
                 ((GetIdsForTagCallback) mCallback).onIdsFetchedFailed();
             }
         });
+    }
+
+    public interface GetSuggestedArtworksCallback extends Callback {
+        public void onSuggestedArtworksFetched(HashMap<String, SimpleTag> encodedStringToSimpleTagHashMap);
+        public void onSuggestedArtworksFetchFailed();
     }
 
     public interface GetIdsForTagCallback extends Callback {

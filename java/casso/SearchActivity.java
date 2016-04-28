@@ -14,6 +14,7 @@ import android.widget.EditText;
 
 import android.widget.ListView;
 import android.widget.TextView;
+import casso.http.OnStartFetchHandler;
 import com.casso.R;
 
 import java.util.Arrays;
@@ -34,6 +35,8 @@ public class SearchActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.search_layout);
+
+        OnStartFetchHandler.fetch(this);
 
         init();
     }
