@@ -11,10 +11,12 @@ import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-
 import android.widget.ListView;
 import android.widget.TextView;
+
 import casso.http.OnStartFetchHandler;
+import casso.model.Artwork;
+
 import com.casso.R;
 
 import java.util.Arrays;
@@ -101,7 +103,11 @@ public class SearchActivity extends FragmentActivity {
     }
 
     private void doSearch() {
+        Artwork artwork = ((OnStartFetchHandler) getApplication()).getArtworks().get(109);
+        Bundle extras = new Bundle();
+        extras.putParcelable(ArtworkProfileActivity.ARTWORK_KEY, artwork);
         Intent intent = new Intent(this, ArtworkProfileActivity.class);
+        intent.putExtras(extras);
         startActivity(intent);
     }
 

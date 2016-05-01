@@ -15,12 +15,10 @@ import android.view.Window;
 import android.widget.TextView;
 
 import casso.http.OnStartFetchHandler;
-import casso.http.YCBARequestHandler;
 import casso.model.Artwork;
 import casso.model.SimpleTag;
 import casso.model.Tag;
 import casso.util.StringUtil;
-import casso.util.XmlUtil;
 import casso.widget.CenterLockHorizontalScrollview;
 import casso.widget.CenterLockHorizontalScrollviewAdapter;
 import casso.widget.ImageViewAndLoadingScreen;
@@ -29,23 +27,15 @@ import com.casso.R;
 
 import com.google.common.base.Preconditions;
 
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class ArtworkProfileActivity extends FragmentActivity implements
-        DownloadImageAsyncTask.Callback,
-        YCBARequestHandler.Callback {
+        DownloadImageAsyncTask.Callback {
 
-    private YCBARequestHandler mYCBARequestHandler;
+    public static final String ARTWORK_KEY = "ARTWORK_KEY";
 
-    private final String mObjectId = "109";
     private Artwork mArtwork;
 
     private ImageViewAndLoadingScreen mImageViewAndLoadingScreen;
@@ -66,13 +56,18 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.artwork_profile_layout);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            mArtwork = extras.getParcelable(ARTWORK_KEY);
+        } else {
+            // quit application
+        }
+
         init();
-        mYCBARequestHandler.execute();
+        setViews();
     }
 
     private void init() {
-        mYCBARequestHandler = new YCBARequestHandler(this, mObjectId, this);
-
         mImageViewAndLoadingScreen = (ImageViewAndLoadingScreen) findViewById(R.id.artwork_profile_image);
         mTitle = (TextView) findViewById(R.id.artwork_profile_title);
         mArtist = (TextView) findViewById(R.id.artwork_profile_artist);
@@ -110,24 +105,6 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         } else {
             Log.e("ArtworkProfileActivity", "bitmap could not be fetched");
         }
-    }
-
-    @Override
-    public void onYCBAResponseFetched(YCBARequestHandler.Result result) {
-        String xml = result.mString;
-        InputStream stream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
-        try {
-            Artwork.Builder builder = new Artwork.Builder();
-            XmlUtil.parse(stream, builder);
-            mArtwork = builder.build();
-            setViews();
-        } catch (XmlPullParserException | IOException e) {
-            Log.d("ArtworkProfileActivity", e.toString());
-        }
-    }
-
-    @Override
-    public void onYCBARequestFailed() {
     }
 
     private void testPrint() {
