@@ -82,21 +82,6 @@ public class FirebaseRequestHandler {
         });
     }
 
-    public void getIdsForTag(String tagName) {
-        mFirebase.child(TAGS).child(tagName).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                List<Integer> idsList = snapshot.getValue(mGenericTypeIndicatorInteger);
-                ((GetIdsForTagCallback) mCallback).onIdsFetched(idsList);
-            }
-
-            @Override
-            public void onCancelled(FirebaseError error) {
-                ((GetIdsForTagCallback) mCallback).onIdsFetchedFailed();
-            }
-        });
-    }
-
     public void setArtworks(List<Artwork> artworks) {
         for (Artwork artwork : artworks) {
             mFirebase.child(ARTWORKS).child(artwork.mId.toString()).setValue(artwork);
@@ -106,11 +91,6 @@ public class FirebaseRequestHandler {
     public interface GetSuggestedArtworksCallback extends Callback {
         public void onSuggestedArtworksFetched(HashMap<String, SimpleTag> firebaseKeyToSimpleTagHashMap);
         public void onSuggestedArtworksFetchFailed();
-    }
-
-    public interface GetIdsForTagCallback extends Callback {
-        public void onIdsFetched(List<Integer> ids);
-        public void onIdsFetchedFailed();
     }
 
     public interface GetObjectIdsCallback extends Callback {
