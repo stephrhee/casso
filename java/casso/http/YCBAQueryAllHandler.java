@@ -17,18 +17,26 @@ import java.util.*;
 
 public class YCBAQueryAllHandler implements YCBARequestHandler.Callback {
 
+    public enum RequestType {
+        PUSH_TAGS_TO_FIREBASE, PUSH_ARTWORKS_TO_FIREBASE;
+    }
+
     private final List<Integer> mObjectIds;
     private int mFetchedCount = 0;
 
     private final HashMap<String, Tag> mNameToTagHashMap = new HashMap<>();
     private final HashMap<Integer, String> mIdToThumbUrlHashMap = new HashMap<>();
 
-    private YCBARequestHandler mYCBARequestHandler;
-    private Context mContext;
+    private final List<Artwork> mArtworks = new ArrayList<>();
 
-    public YCBAQueryAllHandler(Context context, List<Integer> objectIds) {
+    private YCBARequestHandler mYCBARequestHandler;
+    private final Context mContext;
+    private final RequestType mRequestType;
+
+    public YCBAQueryAllHandler(Context context, List<Integer> objectIds, RequestType requestType) {
         mContext = context;
         mObjectIds = objectIds;
+        mRequestType = requestType;
     }
 
     public void execute() {
@@ -76,11 +84,16 @@ public class YCBAQueryAllHandler implements YCBARequestHandler.Callback {
                     mContext,
                     FirebaseRequestHandler.DATA_URL,
                     null);
-            for (String tagName : mNameToTagHashMap.keySet()) {
-                Log.d("YCBAQueryAllHandler", tagName + " " + mNameToTagHashMap.get(tagName).mIdsWithThisTag);
-                firebaseRequestHandler.setTagAndListOfIds(
-                        mNameToTagHashMap.get(tagName),
-                        mIdToThumbUrlHashMap);
+
+            if (mRequestType == RequestType.PUSH_TAGS_TO_FIREBASE) {
+                for (String tagName : mNameToTagHashMap.keySet()) {
+                    Log.d("YCBAQueryAllHandler", tagName + " " + mNameToTagHashMap.get(tagName).mIdsWithThisTag);
+                    firebaseRequestHandler.setTagAndListOfIds(
+                            mNameToTagHashMap.get(tagName),
+                            mIdToThumbUrlHashMap);
+                }
+            } else if (mRequestType == RequestType.PUSH_ARTWORKS_TO_FIREBASE) {
+                firebaseRequestHandler.setArtworks(mArtworks);
             }
         }
     }
@@ -93,7 +106,11 @@ public class YCBAQueryAllHandler implements YCBARequestHandler.Callback {
             Artwork.Builder builder = new Artwork.Builder();
             XmlUtil.parse(stream, builder);
             Artwork artwork = builder.build();
-            updateHashMaps(artwork);
+            if (mRequestType == RequestType.PUSH_TAGS_TO_FIREBASE) {
+                updateHashMaps(artwork);
+            } else if (mRequestType == RequestType.PUSH_ARTWORKS_TO_FIREBASE) {
+                mArtworks.add(artwork);
+            }
         } catch (XmlPullParserException | IOException e) {
             Log.d("YCBAQueryAllHandler", e.toString());
         }

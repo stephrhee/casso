@@ -1,6 +1,7 @@
 package casso.http;
 
 import android.content.Context;
+import casso.model.Artwork;
 import casso.model.SimpleTag;
 import casso.model.Tag;
 import casso.util.StringUtil;
@@ -16,6 +17,7 @@ public class FirebaseRequestHandler {
 
     private final String OBJECT_IDS_JSON_FIELD = "object_ids";
     private final String TAGS = "tags";
+    private final String ARTWORKS = "artworks";
 
     private final GenericTypeIndicator<List<Integer>> mGenericTypeIndicatorInteger =
             new GenericTypeIndicator<List<Integer>>() {
@@ -56,7 +58,6 @@ public class FirebaseRequestHandler {
         String encodedString = StringUtil.getEncodedFirebasePath(tag.mName);
         List<SimpleTag.SimpleArtwork> suggestedArtworks = new ArrayList<>();
         for (Integer id : tag.mIdsWithThisTag) {
-            List<String> idAndUrl = Arrays.asList(id.toString(), idToThumbUrlHashMap.get(id));
             SimpleTag.SimpleArtwork simpleArtwork = new SimpleTag.SimpleArtwork(
                     id,
                     idToThumbUrlHashMap.get(id));
@@ -94,6 +95,12 @@ public class FirebaseRequestHandler {
                 ((GetIdsForTagCallback) mCallback).onIdsFetchedFailed();
             }
         });
+    }
+
+    public void setArtworks(List<Artwork> artworks) {
+        for (Artwork artwork : artworks) {
+            mFirebase.child(ARTWORKS).child(artwork.mId.toString()).setValue(artwork);
+        }
     }
 
     public interface GetSuggestedArtworksCallback extends Callback {
