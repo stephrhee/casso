@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import casso.util.StringUtil;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -14,23 +15,27 @@ import java.util.List;
 
 public class Artwork implements Parcelable {
 
-    public final Integer mId;
-    public final String mTitle;
-    public final String mArtist;
-    public final @Nullable String mYear;
-    public final @Nullable String mHighResImageUrl;
-    public final @Nullable String mLowResImageUrl;
-    public final @Nullable Bitmap mImageBitmap;
-    public final @Nullable String mCategory;
-    public final @Nullable List<String> mObjectTypes;
-    public final @Nullable String mGenre;
-    public final @Nullable String mClassification;
-    public final @Nullable Integer mStartYear;
-    public final @Nullable Integer mEndYear;
-    public final @Nullable List<String> mMaterials;
-    public final @Nullable String mCurator;
-    public final @Nullable String mCuratorialComment;
-    public final @Nullable List<Tag> mTags;
+    public Integer mId;
+    public String mTitle;
+    public String mArtist;
+    public @Nullable String mYear;
+    public @Nullable String mHighResImageUrl;
+    public @Nullable String mLowResImageUrl;
+    public @Nullable Bitmap mImageBitmap;
+    public @Nullable String mCategory;
+    public @Nullable List<String> mObjectTypes;
+    public @Nullable String mGenre;
+    public @Nullable String mClassification;
+    public @Nullable Integer mStartYear;
+    public @Nullable Integer mEndYear;
+    public @Nullable List<String> mMaterials;
+    public @Nullable String mCurator;
+    public @Nullable String mCuratorialComment;
+    public @Nullable List<Tag> mTags;
+
+    @SuppressWarnings("unused")
+    private Artwork() {
+    }
 
     private Artwork(
             Integer id,
@@ -70,6 +75,7 @@ public class Artwork implements Parcelable {
         mTags = tags;
     }
 
+    @JsonIgnore
     public String getTagsAsOneString() {
         if (mTags != null) {
             List<String> tagNames = Lists.transform(mTags, StringUtil.tagsToTagStrings);
@@ -79,6 +85,7 @@ public class Artwork implements Parcelable {
         }
     }
 
+    @JsonIgnore
     public String getYearRange() {
         if (mStartYear == null && mEndYear == null) {
             return null;

@@ -9,9 +9,13 @@ import java.util.List;
 
 public class Tag implements Parcelable {
 
-    public final String mName;
-    public final int mCount;
-    public final List<Integer> mIdsWithThisTag;
+    public String mName;
+    public int mCount;
+    public List<Integer> mIdsWithThisTag;
+
+    @SuppressWarnings("unused")
+    private Tag() {
+    }
 
     private Tag(
             String tag,
