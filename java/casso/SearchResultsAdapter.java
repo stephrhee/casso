@@ -74,22 +74,23 @@ public class SearchResultsAdapter extends ArrayAdapter<Artwork> {
             view = inflater.inflate(mRowViewLayoutResourceId, parent, false);
 
             searchResultHolder = new SearchResultHolder();
-            searchResultHolder.textView = (TextView) view;
+            searchResultHolder.artistTextView =
+                    (TextView) view.findViewById(R.id.search_result_row_view_artist);
+            searchResultHolder.titleTextView =
+                    (TextView) view.findViewById(R.id.search_result_row_view_title);
             view.setTag(searchResultHolder);
         } else {
             searchResultHolder = (SearchResultHolder) view.getTag();
         }
         Artwork artwork = mFilteredArtworks.get(position);
-        if (mType == Type.ARTIST) {
-            searchResultHolder.textView.setText(artwork.mArtist);
-        } else if (mType == Type.TITLE) {
-            searchResultHolder.textView.setText(artwork.mTitle);
-        }
+        searchResultHolder.artistTextView.setText(artwork.mArtist);
+        searchResultHolder.titleTextView.setText(artwork.mTitle);
         return view;
     }
 
     private static class SearchResultHolder {
-        TextView textView;
+        TextView artistTextView;
+        TextView titleTextView;
     }
 
     @Override
