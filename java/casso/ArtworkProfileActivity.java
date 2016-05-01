@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
-import casso.http.FirebaseRequestHandler;
 import casso.http.OnStartFetchHandler;
 import casso.http.YCBARequestHandler;
 import casso.model.Artwork;
@@ -42,7 +41,6 @@ import java.util.List;
 
 public class ArtworkProfileActivity extends FragmentActivity implements
         DownloadImageAsyncTask.Callback,
-        FirebaseRequestHandler.GetObjectIdsCallback,
         YCBARequestHandler.Callback {
 
     private YCBARequestHandler mYCBARequestHandler;
@@ -112,14 +110,6 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         } else {
             Log.e("ArtworkProfileActivity", "bitmap could not be fetched");
         }
-    }
-
-    @Override
-    public void onObjectIdsFetched(List<Integer> objectIdsList) {
-    }
-
-    @Override
-    public void onObjectIdsFetchFailed() {
     }
 
     @Override
