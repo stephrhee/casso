@@ -1,10 +1,12 @@
 package casso.http;
 
 import android.content.Context;
+
 import casso.model.Artwork;
 import casso.model.SimpleTag;
 import casso.model.Tag;
 import casso.util.StringUtil;
+
 import com.firebase.client.*;
 
 import java.util.*;
@@ -25,6 +27,10 @@ public class FirebaseRequestHandler {
 
     private final GenericTypeIndicator<HashMap<String, SimpleTag>> mGenericTypeIndicatorSimpleTags =
             new GenericTypeIndicator<HashMap<String, SimpleTag>>() {
+            };
+
+    private final GenericTypeIndicator<HashMap<Integer, Artwork>> mGenericTypeIndicatorArtworks =
+            new GenericTypeIndicator<HashMap<Integer, Artwork>>() {
             };
 
     private Firebase mFirebase;
@@ -71,8 +77,10 @@ public class FirebaseRequestHandler {
         mFirebase.child(TAGS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                HashMap<String, SimpleTag> firebaseKeyToSimpleTagHashMap = snapshot.getValue(mGenericTypeIndicatorSimpleTags);
-                ((GetSuggestedArtworksCallback) mCallback).onSuggestedArtworksFetched(firebaseKeyToSimpleTagHashMap);
+                HashMap<String, SimpleTag> firebaseKeyToSimpleTagHashMap =
+                        snapshot.getValue(mGenericTypeIndicatorSimpleTags);
+                ((GetSuggestedArtworksCallback) mCallback)
+                        .onSuggestedArtworksFetched(firebaseKeyToSimpleTagHashMap);
             }
 
             @Override
@@ -88,6 +96,22 @@ public class FirebaseRequestHandler {
         }
     }
 
+    public void getArtworks() {
+        mFirebase.child(ARTWORKS).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                HashMap<Integer, Artwork> objectIdToArtworkHashMap =
+                        snapshot.getValue(mGenericTypeIndicatorArtworks);
+                ((GetArtworksCallback) mCallback).onArtworksFetched(objectIdToArtworkHashMap);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError error) {
+                ((GetArtworksCallback) mCallback).onArtworksFetchFailed();
+            }
+        });
+    }
+
     public interface GetSuggestedArtworksCallback extends Callback {
         public void onSuggestedArtworksFetched(HashMap<String, SimpleTag> firebaseKeyToSimpleTagHashMap);
         public void onSuggestedArtworksFetchFailed();
@@ -96,6 +120,11 @@ public class FirebaseRequestHandler {
     public interface GetObjectIdsCallback extends Callback {
         public void onObjectIdsFetched(List<Integer> objectIdsList);
         public void onObjectIdsFetchFailed();
+    }
+
+    public interface GetArtworksCallback extends Callback {
+        public void onArtworksFetched(HashMap<Integer, Artwork> artworks);
+        public void onArtworksFetchFailed();
     }
 
     public interface Callback {

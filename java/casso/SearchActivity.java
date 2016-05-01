@@ -38,6 +38,7 @@ public class SearchActivity extends FragmentActivity {
 
         OnStartFetchHandler.fetchSuggestedArtworks(this, this);
         OnStartFetchHandler.fetchObjectIds(this, this);
+        OnStartFetchHandler.fetchArtworks(this, this);
 
         init();
     }

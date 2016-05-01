@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
+import casso.model.Artwork;
 import casso.model.SimpleTag;
 
 import java.util.HashMap;
@@ -18,6 +19,8 @@ public class OnStartFetchHandler extends Application {
     private HashMap<String, SimpleTag> mSuggestedArtworksHashMap;
 
     private List<Integer> mObjectIds;
+
+    private HashMap<Integer, Artwork> mArtworks;
 
     public static void fetchSuggestedArtworks(final Context context, final Activity activity) {
         /**
@@ -84,6 +87,35 @@ public class OnStartFetchHandler extends Application {
 
     public List<Integer> getObjectIds() {
         return mObjectIds;
+    }
+
+    public static void fetchArtworks(final Context context, final Activity activity) {
+        /**
+         * Fetch HashMap<Integer, Artwork> of <object id, artwork> for current collection
+         */
+        FirebaseRequestHandler getArtworksRequestHandler = new FirebaseRequestHandler(
+                context,
+                FirebaseRequestHandler.DATA_URL,
+                new FirebaseRequestHandler.GetArtworksCallback() {
+                    @Override
+                    public void onArtworksFetched(HashMap<Integer, Artwork> artworks) {
+                        ((OnStartFetchHandler) activity.getApplication()).setArtworks(artworks);
+                    }
+
+                    @Override
+                    public void onArtworksFetchFailed() {
+                    }
+
+                });
+        getArtworksRequestHandler.getArtworks();
+    }
+
+    private void setArtworks(HashMap<Integer, Artwork> artworks) {
+        mArtworks = artworks;
+    }
+
+    public HashMap<Integer, Artwork> getArtworks() {
+        return mArtworks;
     }
 
 }
