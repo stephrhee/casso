@@ -9,10 +9,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 
 import casso.http.OnStartFetchHandler;
 import casso.model.Artwork;
@@ -25,7 +22,10 @@ import java.util.*;
 public class SearchActivity extends FragmentActivity {
 
     private List<Artwork> mArtworksSortedByArtists;
-    private List<Artwork> mArtworksSortedByTitles;
+
+    private EditText mArtistSearchField;
+    private EditText mTitleSearchField;
+    private ListView mSearchResultsListView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,8 +50,6 @@ public class SearchActivity extends FragmentActivity {
     private void initSearchResults() {
         mArtworksSortedByArtists = new ArrayList<>(
                 ((OnStartFetchHandler) getApplication()).getArtworks().values());
-        mArtworksSortedByTitles = new ArrayList<>(
-                ((OnStartFetchHandler) getApplication()).getArtworks().values());
         Collections.sort(mArtworksSortedByArtists, new Comparator<Artwork>() {
             @Override
             public int compare(Artwork lhs, Artwork rhs) {
@@ -59,57 +57,40 @@ public class SearchActivity extends FragmentActivity {
                 return lhs.mArtist.compareTo(rhs.mArtist);
             }
         });
-        Collections.sort(mArtworksSortedByTitles, new Comparator<Artwork>() {
-            @Override
-            public int compare(Artwork lhs, Artwork rhs) {
-                Preconditions.checkArgument(lhs.mTitle != null && rhs.mTitle != null);
-                return lhs.mTitle.compareTo(rhs.mTitle);
-            }
-        });
     }
 
     private void initViews() {
-        final EditText artistSearchField = (EditText) findViewById(R.id.search_artist_search_field);
-        final EditText titleSearchField = (EditText) findViewById(R.id.search_title_search_field);
-        final ListView artistsListView = (ListView) findViewById(R.id.search_artist_results_list_view);
-        final ListView titlesListView = (ListView) findViewById(R.id.search_artwork_titles_list_view);
+        mArtistSearchField = (EditText) findViewById(R.id.search_artist_search_field);
+        mTitleSearchField = (EditText) findViewById(R.id.search_title_search_field);
+        mArtistSearchField.setHint(R.string.search_artist_question_string);
+        mTitleSearchField.setHint(R.string.search_title_question_string);
 
-        artistSearchField.setHint(R.string.search_artist_question_string);
-        titleSearchField.setHint(R.string.search_title_question_string);
+        mSearchResultsListView = (ListView) findViewById(R.id.search_results_list_view);
+        showOrHideSearchResultsBasedOnEditText();
 
-        final SearchResultsAdapter artistsAdapter = new SearchResultsAdapter(
-                this, mArtworksSortedByArtists, SearchResultsAdapter.Type.ARTIST);
-        final SearchResultsAdapter titlesAdapter = new SearchResultsAdapter(
-                this, mArtworksSortedByTitles, SearchResultsAdapter.Type.TITLE);
+        final SearchResultsAdapter searchResultsAdapter = new SearchResultsAdapter(
+                this, mArtworksSortedByArtists);
+        mSearchResultsListView.setAdapter(searchResultsAdapter);
 
-        artistsListView.setAdapter(artistsAdapter);
-        titlesListView.setAdapter(titlesAdapter);
+        TextWatcher textWatcher = getTextWatcher(searchResultsAdapter);
+        mArtistSearchField.addTextChangedListener(textWatcher);
+        mTitleSearchField.addTextChangedListener(textWatcher);
 
-        artistSearchField.addTextChangedListener(getTextWatcher(
-                artistSearchField,
-                artistsListView,
-                artistsAdapter));
-        titleSearchField.addTextChangedListener(getTextWatcher(
-                titleSearchField,
-                titlesListView,
-                titlesAdapter));
+        mArtistSearchField.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        mTitleSearchField.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
 
-        artistSearchField.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-        titleSearchField.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
-
-        artistSearchField.setOnEditorActionListener(
+        mArtistSearchField.setOnEditorActionListener(
                 new TextView.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                         if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                            hideSearchResults(artistsListView);
-                            titleSearchField.requestFocus();
+                            mTitleSearchField.requestFocus();
                             return true;
                         }
                         return false;
                     }
                 });
-        titleSearchField.setOnEditorActionListener(
+        mTitleSearchField.setOnEditorActionListener(
                 new TextView.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -121,25 +102,11 @@ public class SearchActivity extends FragmentActivity {
                     }
                 });
 
-        artistSearchField.setOnFocusChangeListener(getOnFocusChangeListener(
-                artistsListView,
-                titlesListView,
-                artistSearchField));
-        titleSearchField.setOnFocusChangeListener(getOnFocusChangeListener(
-                titlesListView,
-                artistsListView,
-                titleSearchField));
-
-        artistsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mSearchResultsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                artistSearchField.setText(artistsAdapter.getItem(position).mArtist);
-            }
-        });
-        titlesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                titleSearchField.setText(titlesAdapter.getItem(position).mTitle);
+                mArtistSearchField.setText(searchResultsAdapter.getItem(position).mArtist);
+                mTitleSearchField.setText(searchResultsAdapter.getItem(position).mTitle);
             }
         });
     }
@@ -153,52 +120,32 @@ public class SearchActivity extends FragmentActivity {
         startActivity(intent);
     }
 
-    private TextWatcher getTextWatcher(
-            final EditText editText,
-            final ListView listView,
-            final SearchResultsAdapter adapter) {
+    private TextWatcher getTextWatcher(final SearchResultsAdapter adapter) {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                showOrHideSearchResultsBasedOnEditText(editText, listView);
+                showOrHideSearchResultsBasedOnEditText();
+                adapter.setArtistConstraint(mArtistSearchField.getText().toString());
+                adapter.setTitleConstraint(mTitleSearchField.getText().toString());
                 adapter.getFilter().filter(s);
             }
+
             @Override
             public void afterTextChanged(Editable s) {
             }
         };
     }
 
-    private void showOrHideSearchResultsBasedOnEditText(
-            EditText editText,
-            ListView listView) {
-        if (editText.getText().length() > 0) {
-            listView.setVisibility(View.VISIBLE);
+    private void showOrHideSearchResultsBasedOnEditText() {
+        if (mArtistSearchField.getText().length() > 0 || mTitleSearchField.getText().length() > 0) {
+            mSearchResultsListView.setVisibility(View.VISIBLE);
         } else {
-            hideSearchResults(listView);
+            mSearchResultsListView.setVisibility(View.GONE);
         }
-    }
-
-    private void hideSearchResults(ListView listView) {
-        listView.setVisibility(View.GONE);
-    }
-
-    private View.OnFocusChangeListener getOnFocusChangeListener(
-            final ListView thisSearchResults,
-            final ListView otherSearchResults,
-            final EditText thisEditText) {
-        return new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                hideSearchResults(otherSearchResults);
-                showOrHideSearchResultsBasedOnEditText(
-                        thisEditText,
-                        thisSearchResults);
-            }
-        };
     }
 
 }

@@ -13,7 +13,6 @@ import casso.model.Artwork;
 import casso.util.StringUtil;
 
 import com.casso.R;
-import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,35 +21,27 @@ import java.util.List;
 
 public class SearchResultsAdapter extends ArrayAdapter<Artwork> {
 
-    public enum Type {
-        ARTIST, TITLE;
-    }
+    private String mArtistConstraint;
+    private String mTitleConstraint;
 
     private static final int mRowViewLayoutResourceId = R.layout.search_result_row_view;
 
     private final Context mContext;
     private final SearchResultsFilter mFilter = new SearchResultsFilter();
     private final List<Artwork> mArtworks;
-    private final Type mType;
-    private final HashMap<Artwork, List<String>> mSearchableStrings;
+    private final HashMap<Artwork, List<String>> mSearchableArtistStrings = new HashMap<>();
+    private final HashMap<Artwork, List<String>> mSearchableTitleStrings = new HashMap<>();
     private List<Artwork> mFilteredArtworks;
 
     public SearchResultsAdapter(
             Context context,
-            List<Artwork> artworks,
-            Type type) {
+            List<Artwork> artworks) {
         super(context, mRowViewLayoutResourceId, artworks);
         mContext = context;
         mArtworks = artworks;
-        mType = type;
-        Preconditions.checkArgument(mType == Type.ARTIST || mType == Type.TITLE);
-        mSearchableStrings = new HashMap<>();
         for (Artwork artwork : mArtworks) {
-            if (mType == Type.ARTIST) {
-                mSearchableStrings.put(artwork, StringUtil.getSearchableStrings(artwork.mArtist));
-            } else if (mType == Type.TITLE) {
-                mSearchableStrings.put(artwork, StringUtil.getSearchableStrings(artwork.mTitle));
-            }
+            mSearchableArtistStrings.put(artwork, StringUtil.getSearchableStrings(artwork.mArtist));
+            mSearchableTitleStrings.put(artwork, StringUtil.getSearchableStrings(artwork.mTitle));
         }
         mFilteredArtworks = artworks;
     }
@@ -98,38 +89,64 @@ public class SearchResultsAdapter extends ArrayAdapter<Artwork> {
         return mFilter;
     }
 
-    private class SearchResultsFilter extends Filter {
+    public void setArtistConstraint(String artistConstraint) {
+        mArtistConstraint = artistConstraint;
+    }
 
+    public void setTitleConstraint(String titleConstraint) {
+        mTitleConstraint = titleConstraint;
+    }
+
+    private class SearchResultsFilter extends Filter {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
-            if (constraint == null || constraint.length() == 0) {
+            if ((mArtistConstraint == null || mArtistConstraint.length() == 0)
+                    && (mTitleConstraint == null || mTitleConstraint.length() == 0)) {
                 results.values = mArtworks;
                 results.count = mArtworks.size();
             } else {
-                List<String> filterWords = Arrays.asList(constraint.toString().toLowerCase().split("\\s+"));
-                List<Artwork> filteredArtworks = new ArrayList<>();
-                for (Artwork artwork : mArtworks) {
-                    List<String> searchableStrings = mSearchableStrings.get(artwork);
-                    boolean doesHaveAllFilterWords = true;
-                    for (String filterWord : filterWords) {
-                        boolean doesHaveThisFilterWord = false;
-                        for (String searchableStringWord : searchableStrings) {
-                            if (searchableStringWord.toLowerCase().startsWith(filterWord.toLowerCase())) {
-                                doesHaveThisFilterWord = true;
-                                break;
-                            }
-                        }
-                        doesHaveAllFilterWords = doesHaveAllFilterWords && doesHaveThisFilterWord;
-                    }
-                    if (doesHaveAllFilterWords) {
-                        filteredArtworks.add(artwork);
-                    }
-                }
+                List<String> artistConstraints = Arrays.asList(
+                        mArtistConstraint.toLowerCase().split("\\s+"));
+                List<String> titleConstraints = Arrays.asList(
+                        mTitleConstraint.toLowerCase().split("\\s+"));
+                List<Artwork> filteredArtworks = getFilteredArtworks(
+                        mArtworks,
+                        artistConstraints,
+                        mSearchableArtistStrings);
+                filteredArtworks = getFilteredArtworks(
+                        filteredArtworks,
+                        titleConstraints,
+                        mSearchableTitleStrings);
                 results.values = filteredArtworks;
                 results.count = filteredArtworks.size();
             }
             return results;
+        }
+
+        private List<Artwork> getFilteredArtworks(
+                List<Artwork> artworks,
+                List<String> constraints,
+                HashMap<Artwork, List<String>> searchableStringsHashMap) {
+            List<Artwork> filteredArtworks = new ArrayList<>();
+            for (Artwork artwork : artworks) {
+                List<String> searchableStrings = searchableStringsHashMap.get(artwork);
+                boolean doesHaveAllConstraints = true;
+                for (String constraint : constraints) {
+                    boolean doesHaveThisConstraint = false;
+                    for (String searchableStringWord : searchableStrings) {
+                        if (searchableStringWord.toLowerCase().startsWith(constraint.toLowerCase())) {
+                            doesHaveThisConstraint = true;
+                            break;
+                        }
+                    }
+                    doesHaveAllConstraints = doesHaveAllConstraints && doesHaveThisConstraint;
+                }
+                if (doesHaveAllConstraints) {
+                    filteredArtworks.add(artwork);
+                }
+            }
+            return filteredArtworks;
         }
 
         @Override
