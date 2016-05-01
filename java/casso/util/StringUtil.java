@@ -76,7 +76,7 @@ public class StringUtil {
     }
 
     @JsonIgnore
-    public static List<String> getListOfSplitWords(String string) {
+    public static List<String> getSearchableStrings(String string) {
         List<String> splitWords = new ArrayList<>();
         if (string != null) {
             splitWords.addAll(Arrays.asList(string.split("\\s+")));

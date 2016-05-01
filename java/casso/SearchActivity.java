@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -76,9 +77,9 @@ public class SearchActivity extends FragmentActivity {
         artistSearchField.setHint(R.string.search_artist_question_string);
         titleSearchField.setHint(R.string.search_title_question_string);
 
-        SearchResultsAdapter artistsAdapter = new SearchResultsAdapter(
+        final SearchResultsAdapter artistsAdapter = new SearchResultsAdapter(
                 this, mArtworksSortedByArtists, SearchResultsAdapter.Type.ARTIST);
-        SearchResultsAdapter titlesAdapter = new SearchResultsAdapter(
+        final SearchResultsAdapter titlesAdapter = new SearchResultsAdapter(
                 this, mArtworksSortedByTitles, SearchResultsAdapter.Type.TITLE);
 
         artistsListView.setAdapter(artistsAdapter);
@@ -128,6 +129,19 @@ public class SearchActivity extends FragmentActivity {
                 titlesListView,
                 artistsListView,
                 titleSearchField));
+
+        artistsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                artistSearchField.setText(artistsAdapter.getItem(position).mArtist);
+            }
+        });
+        titlesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                titleSearchField.setText(titlesAdapter.getItem(position).mTitle);
+            }
+        });
     }
 
     private void doSearch() {

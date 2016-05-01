@@ -16,6 +16,7 @@ import com.casso.R;
 import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -46,9 +47,9 @@ public class SearchResultsAdapter extends ArrayAdapter<Artwork> {
         mSearchableStrings = new HashMap<>();
         for (Artwork artwork : mArtworks) {
             if (mType == Type.ARTIST) {
-                mSearchableStrings.put(artwork, StringUtil.getListOfSplitWords(artwork.mArtist));
+                mSearchableStrings.put(artwork, StringUtil.getSearchableStrings(artwork.mArtist));
             } else if (mType == Type.TITLE) {
-                mSearchableStrings.put(artwork, StringUtil.getListOfSplitWords(artwork.mTitle));
+                mSearchableStrings.put(artwork, StringUtil.getSearchableStrings(artwork.mTitle));
             }
         }
         mFilteredArtworks = artworks;
@@ -105,16 +106,23 @@ public class SearchResultsAdapter extends ArrayAdapter<Artwork> {
                 results.values = mArtworks;
                 results.count = mArtworks.size();
             } else {
-                String filter = constraint.toString().toLowerCase();
+                List<String> filterWords = Arrays.asList(constraint.toString().toLowerCase().split("\\s+"));
                 List<Artwork> filteredArtworks = new ArrayList<>();
-
                 for (Artwork artwork : mArtworks) {
                     List<String> searchableStrings = mSearchableStrings.get(artwork);
-                    for (String string : searchableStrings) {
-                        if (string.toLowerCase().startsWith(filter)) {
-                            filteredArtworks.add(artwork);
-                            break;
+                    boolean doesHaveAllFilterWords = true;
+                    for (String filterWord : filterWords) {
+                        boolean doesHaveThisFilterWord = false;
+                        for (String searchableStringWord : searchableStrings) {
+                            if (searchableStringWord.toLowerCase().startsWith(filterWord.toLowerCase())) {
+                                doesHaveThisFilterWord = true;
+                                break;
+                            }
                         }
+                        doesHaveAllFilterWords = doesHaveAllFilterWords && doesHaveThisFilterWord;
+                    }
+                    if (doesHaveAllFilterWords) {
+                        filteredArtworks.add(artwork);
                     }
                 }
                 results.values = filteredArtworks;
