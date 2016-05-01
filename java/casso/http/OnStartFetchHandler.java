@@ -89,7 +89,10 @@ public class OnStartFetchHandler extends Application {
         return mObjectIds;
     }
 
-    public static void fetchArtworks(final Context context, final Activity activity) {
+    public static void fetchArtworks(
+            final Context context,
+            final Activity activity,
+            final SetArtworksCallback callback) {
         /**
          * Fetch HashMap<Integer, Artwork> of <object id, artwork> for current collection
          */
@@ -100,6 +103,7 @@ public class OnStartFetchHandler extends Application {
                     @Override
                     public void onArtworksFetched(HashMap<Integer, Artwork> artworks) {
                         ((OnStartFetchHandler) activity.getApplication()).setArtworks(artworks);
+                        callback.onArtworksSet();
                     }
 
                     @Override
@@ -116,6 +120,10 @@ public class OnStartFetchHandler extends Application {
 
     public HashMap<Integer, Artwork> getArtworks() {
         return mArtworks;
+    }
+
+    public interface SetArtworksCallback {
+        public void onArtworksSet();
     }
 
 }

@@ -19,7 +19,7 @@ import casso.model.Artwork;
 
 import com.casso.R;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SearchActivity extends FragmentActivity {
@@ -29,8 +29,8 @@ public class SearchActivity extends FragmentActivity {
     private ListView mArtistSuggestionsListView;
     private ListView mArtworkSuggestionsListView;
 
-    private final List<String> mArtistSuggestions = Arrays.asList("Richard Cosway", "Francis Danby", "Benjamin van der Gucht", "Francis Hayman", "Thomas Hickey", "William Hodges", "Edward Lear");
-    private final List<String> mArtworkSuggestions = Arrays.asList("Portrait of an Armenian", "The Mountain Torrent", "Henry Woodward as Petruchio in Catherine and Petruchio", "The Good Samaritan", "Purniya, Chief Minister of Mysore", "Storm on the Ganges, with Mrs. Hastings near the Col-gon Rocks", "Philae, Egypt");
+    private final List<String> mArtistSuggestions = new ArrayList<>();
+    private final List<String> mArtworkSuggestions = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,14 +38,29 @@ public class SearchActivity extends FragmentActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.search_layout);
 
+        initViews();
+
         OnStartFetchHandler.fetchSuggestedArtworks(this, this);
         OnStartFetchHandler.fetchObjectIds(this, this);
-        OnStartFetchHandler.fetchArtworks(this, this);
-
-        init();
+        OnStartFetchHandler.fetchArtworks(
+                this,
+                this,
+                new OnStartFetchHandler.SetArtworksCallback() {
+                    @Override
+                    public void onArtworksSet() {
+                        initSuggestions();
+                    }
+                });
     }
 
-    private void init() {
+    private void initSuggestions() {
+        for (Artwork artwork : ((OnStartFetchHandler) getApplication()).getArtworks().values()) {
+            mArtistSuggestions.add(artwork.mArtist);
+            mArtworkSuggestions.add(artwork.mTitle);
+        }
+    }
+
+    private void initViews() {
         mArtistSearchField = (EditText) findViewById(R.id.search_artist_search_field);
         mArtworkSearchField = (EditText) findViewById(R.id.search_artwork_search_field);
         mArtistSuggestionsListView = (ListView) findViewById(R.id.search_artist_suggestions_list_view);
