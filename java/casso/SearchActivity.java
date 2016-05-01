@@ -37,6 +37,7 @@ public class SearchActivity extends FragmentActivity {
         setContentView(R.layout.search_layout);
 
         OnStartFetchHandler.fetchSuggestedArtworks(this, this);
+        OnStartFetchHandler.fetchObjectIds(this, this);
 
         init();
     }
