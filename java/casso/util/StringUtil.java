@@ -1,7 +1,12 @@
 package casso.util;
 
 import casso.model.Tag;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Function;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class StringUtil {
 
@@ -68,6 +73,15 @@ public class StringUtil {
                 .replace(marker + DOLLARSIGN + marker, dollarSignSymbol)
                 .replace(marker + LEFTBRACKET + marker, leftBracketSymbol)
                 .replace(marker + RIGHTBRACKET + marker, rightBracketSymbol);
+    }
+
+    @JsonIgnore
+    public static List<String> getListOfSplitWords(String string) {
+        List<String> splitWords = new ArrayList<>();
+        if (string != null) {
+            splitWords.addAll(Arrays.asList(string.split("\\s+")));
+        }
+        return splitWords;
     }
 
 }

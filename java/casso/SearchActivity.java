@@ -9,7 +9,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,27 +17,20 @@ import casso.http.OnStartFetchHandler;
 import casso.model.Artwork;
 
 import com.casso.R;
+import com.google.common.base.Preconditions;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class SearchActivity extends FragmentActivity {
 
-    private EditText mArtistSearchField;
-    private EditText mArtworkSearchField;
-    private ListView mArtistSuggestionsListView;
-    private ListView mArtworkSuggestionsListView;
-
-    private final List<String> mArtistSuggestions = new ArrayList<>();
-    private final List<String> mArtworkSuggestions = new ArrayList<>();
+    private List<Artwork> mArtworksSortedByArtists;
+    private List<Artwork> mArtworksSortedByTitles;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.search_layout);
-
-        initViews();
 
         OnStartFetchHandler.fetchSuggestedArtworks(this, this);
         OnStartFetchHandler.fetchObjectIds(this, this);
@@ -48,52 +40,75 @@ public class SearchActivity extends FragmentActivity {
                 new OnStartFetchHandler.SetArtworksCallback() {
                     @Override
                     public void onArtworksSet() {
-                        initSuggestions();
+                        initSearchResults();
+                        initViews();
                     }
                 });
     }
 
-    private void initSuggestions() {
-        for (Artwork artwork : ((OnStartFetchHandler) getApplication()).getArtworks().values()) {
-            mArtistSuggestions.add(artwork.mArtist);
-            mArtworkSuggestions.add(artwork.mTitle);
-        }
+    private void initSearchResults() {
+        mArtworksSortedByArtists = new ArrayList<>(
+                ((OnStartFetchHandler) getApplication()).getArtworks().values());
+        mArtworksSortedByTitles = new ArrayList<>(
+                ((OnStartFetchHandler) getApplication()).getArtworks().values());
+        Collections.sort(mArtworksSortedByArtists, new Comparator<Artwork>() {
+            @Override
+            public int compare(Artwork lhs, Artwork rhs) {
+                Preconditions.checkArgument(lhs.mArtist != null && rhs.mArtist != null);
+                return lhs.mArtist.compareTo(rhs.mArtist);
+            }
+        });
+        Collections.sort(mArtworksSortedByTitles, new Comparator<Artwork>() {
+            @Override
+            public int compare(Artwork lhs, Artwork rhs) {
+                Preconditions.checkArgument(lhs.mTitle != null && rhs.mTitle != null);
+                return lhs.mTitle.compareTo(rhs.mTitle);
+            }
+        });
     }
 
     private void initViews() {
-        mArtistSearchField = (EditText) findViewById(R.id.search_artist_search_field);
-        mArtworkSearchField = (EditText) findViewById(R.id.search_artwork_search_field);
-        mArtistSuggestionsListView = (ListView) findViewById(R.id.search_artist_suggestions_list_view);
-        mArtworkSuggestionsListView = (ListView) findViewById(R.id.search_artwork_suggestions_list_view);
+        final EditText artistSearchField = (EditText) findViewById(R.id.search_artist_search_field);
+        final EditText titleSearchField = (EditText) findViewById(R.id.search_title_search_field);
+        final ListView artistsListView = (ListView) findViewById(R.id.search_artist_results_list_view);
+        final ListView titlesListView = (ListView) findViewById(R.id.search_artwork_titles_list_view);
 
-        mArtistSearchField.setHint(R.string.search_artist_question_string);
-        mArtworkSearchField.setHint(R.string.search_artwork_question_string);
+        artistSearchField.setHint(R.string.search_artist_question_string);
+        titleSearchField.setHint(R.string.search_title_question_string);
 
-        mArtistSearchField.addTextChangedListener(getTextWatcher(
-                mArtistSearchField,
-                mArtistSuggestionsListView,
-                mArtistSuggestions));
-        mArtworkSearchField.addTextChangedListener(getTextWatcher(
-                mArtworkSearchField,
-                mArtworkSuggestionsListView,
-                mArtworkSuggestions));
+        SearchResultsAdapter artistsAdapter = new SearchResultsAdapter(
+                this, mArtworksSortedByArtists, SearchResultsAdapter.Type.ARTIST);
+        SearchResultsAdapter titlesAdapter = new SearchResultsAdapter(
+                this, mArtworksSortedByTitles, SearchResultsAdapter.Type.TITLE);
 
-        mArtistSearchField.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-        mArtworkSearchField.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+        artistsListView.setAdapter(artistsAdapter);
+        titlesListView.setAdapter(titlesAdapter);
 
-        mArtistSearchField.setOnEditorActionListener(
+        artistSearchField.addTextChangedListener(getTextWatcher(
+                artistSearchField,
+                artistsListView,
+                artistsAdapter));
+        titleSearchField.addTextChangedListener(getTextWatcher(
+                titleSearchField,
+                titlesListView,
+                titlesAdapter));
+
+        artistSearchField.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        titleSearchField.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+
+        artistSearchField.setOnEditorActionListener(
                 new TextView.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                         if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                            hideSuggestions(mArtistSuggestionsListView);
-                            mArtworkSearchField.requestFocus();
+                            hideSearchResults(artistsListView);
+                            titleSearchField.requestFocus();
                             return true;
                         }
                         return false;
                     }
                 });
-        mArtworkSearchField.setOnEditorActionListener(
+        titleSearchField.setOnEditorActionListener(
                 new TextView.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -105,16 +120,14 @@ public class SearchActivity extends FragmentActivity {
                     }
                 });
 
-        mArtistSearchField.setOnFocusChangeListener(getOnFocusChangeListener(
-                mArtistSuggestionsListView,
-                mArtworkSuggestionsListView,
-                mArtistSearchField,
-                mArtistSuggestions));
-        mArtworkSearchField.setOnFocusChangeListener(getOnFocusChangeListener(
-                mArtworkSuggestionsListView,
-                mArtistSuggestionsListView,
-                mArtworkSearchField,
-                mArtworkSuggestions));
+        artistSearchField.setOnFocusChangeListener(getOnFocusChangeListener(
+                artistsListView,
+                titlesListView,
+                artistSearchField));
+        titleSearchField.setOnFocusChangeListener(getOnFocusChangeListener(
+                titlesListView,
+                artistsListView,
+                titleSearchField));
     }
 
     private void doSearch() {
@@ -129,14 +142,15 @@ public class SearchActivity extends FragmentActivity {
     private TextWatcher getTextWatcher(
             final EditText editText,
             final ListView listView,
-            final List<String> suggestions) {
+            final SearchResultsAdapter adapter) {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                showOrHideSuggestionsBasedOnEditText(editText, listView, suggestions);
+                showOrHideSearchResultsBasedOnEditText(editText, listView);
+                adapter.getFilter().filter(s);
             }
             @Override
             public void afterTextChanged(Editable s) {
@@ -144,36 +158,31 @@ public class SearchActivity extends FragmentActivity {
         };
     }
 
-    private void showOrHideSuggestionsBasedOnEditText(
+    private void showOrHideSearchResultsBasedOnEditText(
             EditText editText,
-            ListView listView,
-            List<String> suggestions) {
+            ListView listView) {
         if (editText.getText().length() > 0) {
             listView.setVisibility(View.VISIBLE);
-            listView.setAdapter(new ArrayAdapter<>(
-                    this, R.layout.search_suggestions_row_view, suggestions));
         } else {
-            hideSuggestions(listView);
+            hideSearchResults(listView);
         }
     }
 
-    private void hideSuggestions(ListView listView) {
+    private void hideSearchResults(ListView listView) {
         listView.setVisibility(View.GONE);
     }
 
     private View.OnFocusChangeListener getOnFocusChangeListener(
-            final ListView thisSuggestionsListView,
-            final ListView otherSuggestionsListView,
-            final EditText thisEditText,
-            final List<String> thisSuggestions) {
+            final ListView thisSearchResults,
+            final ListView otherSearchResults,
+            final EditText thisEditText) {
         return new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                hideSuggestions(otherSuggestionsListView);
-                showOrHideSuggestionsBasedOnEditText(
+                hideSearchResults(otherSearchResults);
+                showOrHideSearchResultsBasedOnEditText(
                         thisEditText,
-                        thisSuggestionsListView,
-                        thisSuggestions);
+                        thisSearchResults);
             }
         };
     }
