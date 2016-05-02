@@ -23,6 +23,8 @@ public class SearchActivity extends FragmentActivity {
 
     private List<Artwork> mArtworksSortedByArtists;
 
+    private Artwork mClickedArtwork;
+
     private EditText mArtistSearchField;
     private EditText mTitleSearchField;
     private ListView mSearchResultsListView;
@@ -95,7 +97,7 @@ public class SearchActivity extends FragmentActivity {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                            doSearch();
+//                            doSearch();
                             return true;
                         }
                         return false;
@@ -105,19 +107,24 @@ public class SearchActivity extends FragmentActivity {
         mSearchResultsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mArtistSearchField.setText(searchResultsAdapter.getItem(position).mArtist);
-                mTitleSearchField.setText(searchResultsAdapter.getItem(position).mTitle);
+                mClickedArtwork = searchResultsAdapter.getItem(position);
+//                mArtistSearchField.setText(searchResultsAdapter.getItem(position).mArtist);
+//                mTitleSearchField.setText(searchResultsAdapter.getItem(position).mTitle);
+                doSearch();
             }
         });
     }
 
     private void doSearch() {
-        Artwork artwork = ((OnStartFetchHandler) getApplication()).getArtworks().get(109);
-        Bundle extras = new Bundle();
-        extras.putParcelable(ArtworkProfileActivity.ARTWORK_KEY, artwork);
-        Intent intent = new Intent(this, ArtworkProfileActivity.class);
-        intent.putExtras(extras);
-        startActivity(intent);
+        if (mClickedArtwork != null) {
+            Bundle extras = new Bundle();
+            extras.putParcelable(ArtworkProfileActivity.ARTWORK_KEY, mClickedArtwork);
+            Intent intent = new Intent(this, ArtworkProfileActivity.class);
+            intent.putExtras(extras);
+            startActivity(intent);
+        } else {
+
+        }
     }
 
     private TextWatcher getTextWatcher(final SearchResultsAdapter adapter) {
