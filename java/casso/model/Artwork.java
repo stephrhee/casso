@@ -287,8 +287,8 @@ public class Artwork implements Parcelable {
         mTitle = in.readString();
         mArtist = in.readString();
         mYear = in.readString();
-        mLowResImageUrl = in.readString();
         mHighResImageUrl = in.readString();
+        mLowResImageUrl = in.readString();
         mImageBitmap = in.readParcelable(Bitmap.class.getClassLoader());
         mCategory = in.readString();
         mObjectTypes = new ArrayList<String>();
