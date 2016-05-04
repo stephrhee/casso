@@ -20,35 +20,31 @@
                 android:id="@+id/artwork_profile_artist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textSize="@dimen/artwork_profile_artist_font_size"
                 android:paddingTop="@dimen/search_box_edit_text_padding"
                 android:paddingLeft="@dimen/search_box_edit_text_padding"
                 android:paddingRight="@dimen/search_box_edit_text_padding"
-                android:textStyle="bold"
-                />
+                android:textSize="@dimen/artwork_profile_artist_font_size"
+                style="@style/MuseumLabelTypefaceStyle" />
 
         <TextView
                 android:id="@+id/artwork_profile_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textSize="@dimen/artwork_profile_artwork_font_size"
                 android:paddingTop="@dimen/search_box_edit_text_padding"
                 android:paddingLeft="@dimen/search_box_edit_text_padding"
                 android:paddingRight="@dimen/search_box_edit_text_padding"
-                />
+                android:textSize="@dimen/artwork_profile_artwork_font_size"
+                style="@style/MuseumLabelTypefaceStyle" />
 
         <TextView
                 android:id="@+id/artwork_profile_year"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textSize="@dimen/artwork_profile_artwork_font_size"
                 android:paddingLeft="@dimen/search_box_edit_text_padding"
                 android:paddingRight="@dimen/search_box_edit_text_padding"
                 android:paddingBottom="@dimen/search_box_edit_text_padding"
-                />
+                android:textSize="@dimen/artwork_profile_year_font_size"
+                style="@style/MuseumLabelTypefaceStyle" />
 
         <View
                 android:layout_width="match_parent"
@@ -56,22 +52,21 @@
                 android:background="@color/gray" />
 
         <TextView
+                android:id="@+id/artwork_profile_tags_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textSize="@dimen/artwork_profile_artist_font_size"
                 android:padding="@dimen/search_box_edit_text_padding"
                 android:text="@string/artwork_profile_tags_string"
-                />
+                android:textSize="@dimen/artwork_profile_tags_font_size"
+                style="@style/MuseumLabelTypefaceStyle" />
 
         <TextView
                 android:id="@+id/artwork_profile_tags"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textSize="@dimen/artwork_profile_description_font_size"
                 android:padding="@dimen/search_box_edit_text_padding"
-                />
+                android:textSize="@dimen/artwork_profile_tags_font_size"
+                style="@style/MuseumLabelTypefaceStyle" />
 
         <casso.widget.CenterLockHorizontalScrollview
                 android:id="@+id/suggested_artworks_scrollview"

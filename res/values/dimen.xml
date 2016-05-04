@@ -16,10 +16,10 @@
 
     <dimen name="search_box_edit_text_padding">10dp</dimen>
 
-    <dimen name="artwork_profile_artist_font_size">20sp</dimen>
-    <dimen name="artwork_profile_artwork_font_size">15sp</dimen>
-    <dimen name="artwork_profile_year_font_size">@dimen/artwork_profile_artwork_font_size</dimen>
-    <dimen name="artwork_profile_description_font_size">@dimen/artwork_profile_artwork_font_size</dimen>
+    <dimen name="artwork_profile_artist_font_size">17sp</dimen>
+    <dimen name="artwork_profile_artwork_font_size">17sp</dimen>
+    <dimen name="artwork_profile_year_font_size">17sp</dimen>
+    <dimen name="artwork_profile_tags_font_size">17sp</dimen>
 
     <dimen name="artwork_profile_circular_progress_view_size">50dp</dimen>
 

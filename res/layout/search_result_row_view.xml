@@ -15,17 +15,16 @@
             android:id="@+id/search_result_row_view_artist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/blue"
             android:textSize="@dimen/search_suggestions_row_view_font_size"
-            android:singleLine="true" />
+            android:singleLine="true"
+            style="@style/MuseumLabelTypefaceStyle" />
 
     <TextView
             android:id="@+id/search_result_row_view_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/blue"
             android:textSize="@dimen/search_suggestions_row_view_font_size"
-            android:textStyle="italic"
-            android:singleLine="true" />
+            android:singleLine="true"
+            style="@style/MuseumLabelTypefaceStyle" />
 
 </LinearLayout>

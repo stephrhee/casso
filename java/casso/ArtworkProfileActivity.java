@@ -1,6 +1,7 @@
 package casso;
 
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -18,6 +19,7 @@ import casso.http.OnStartFetchHandler;
 import casso.model.Artwork;
 import casso.model.SimpleTag;
 import casso.model.Tag;
+import casso.util.FontUtil;
 import casso.util.StringUtil;
 import casso.widget.CenterLockHorizontalScrollview;
 import casso.widget.CenterLockHorizontalScrollviewAdapter;
@@ -42,6 +44,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
     private TextView mTitle;
     private TextView mArtist;
     private TextView mYear;
+    private TextView mTagsLabel;
     private TextView mTags;
     private CenterLockHorizontalScrollview mSuggestedArtworksScrollview;
 
@@ -49,6 +52,9 @@ public class ArtworkProfileActivity extends FragmentActivity implements
     private List<Bitmap> mSuggestedArtworksBitmaps = new ArrayList<>();
     private String mLastClickedEncodedTagName;
     private List<DownloadImageAsyncTask> mPendingSuggestedArtworkBitmapsDownloadTasks;
+
+    private Typeface mGoudyStMRegularTypeface;
+    private Typeface mGoudyStMItalicTypeface;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +71,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
 
         init();
         setViews();
+        setTypefaces();
     }
 
     private void init() {
@@ -72,6 +79,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         mTitle = (TextView) findViewById(R.id.artwork_profile_title);
         mArtist = (TextView) findViewById(R.id.artwork_profile_artist);
         mYear = (TextView) findViewById(R.id.artwork_profile_year);
+        mTagsLabel = (TextView) findViewById(R.id.artwork_profile_tags_label);
         mTags = (TextView) findViewById(R.id.artwork_profile_tags);
         mSuggestedArtworksScrollview = (CenterLockHorizontalScrollview) findViewById(R.id.suggested_artworks_scrollview);
 
@@ -80,6 +88,13 @@ public class ArtworkProfileActivity extends FragmentActivity implements
                 R.layout.suggested_artwork_view,
                 mSuggestedArtworksBitmaps);
         mSuggestedArtworksScrollview.setAdapter(mSuggestedArtworksAdapter);
+
+        mGoudyStMRegularTypeface = FontUtil.getTypeface(
+                this,
+                FontUtil.mGoudyStMRegularTypefaceString);
+        mGoudyStMItalicTypeface = FontUtil.getTypeface(
+                this,
+                FontUtil.mGoudyStMItalicTypefaceString);
     }
 
     private void setViews() {
@@ -96,6 +111,14 @@ public class ArtworkProfileActivity extends FragmentActivity implements
             mSuggestedArtworksScrollview.setVisibility(View.GONE);
         }
         mSuggestedArtworksScrollview.setVisibility(View.GONE);
+    }
+
+    private void setTypefaces() {
+        mArtist.setTypeface(mGoudyStMRegularTypeface);
+        mTitle.setTypeface(mGoudyStMItalicTypeface);
+        mYear.setTypeface(mGoudyStMRegularTypeface);
+        mTagsLabel.setTypeface(mGoudyStMRegularTypeface);
+        mTags.setTypeface(mGoudyStMRegularTypeface);
     }
 
     @Override

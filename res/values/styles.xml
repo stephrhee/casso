@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MuseumLabelTypefaceStyle">
+        <item name="android:textColor">@color/blue_grey_600</item>
+    </style>
+
+</resources>

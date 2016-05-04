@@ -2,6 +2,7 @@ package casso;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.Filter;
 import android.widget.TextView;
 
 import casso.model.Artwork;
+import casso.util.FontUtil;
 import casso.util.StringUtil;
 
 import com.casso.R;
@@ -32,6 +34,8 @@ public class SearchResultsAdapter extends ArrayAdapter<Artwork> {
     private final HashMap<Artwork, List<String>> mSearchableArtistStrings = new HashMap<>();
     private final HashMap<Artwork, List<String>> mSearchableTitleStrings = new HashMap<>();
     private List<Artwork> mFilteredArtworks;
+    private final Typeface mGoudyStMRegularTypeface;
+    private final Typeface mGoudyStMItalicTypeface;
 
     public SearchResultsAdapter(
             Context context,
@@ -44,6 +48,13 @@ public class SearchResultsAdapter extends ArrayAdapter<Artwork> {
             mSearchableTitleStrings.put(artwork, StringUtil.getSearchableStrings(artwork.mTitle));
         }
         mFilteredArtworks = artworks;
+
+        mGoudyStMRegularTypeface = FontUtil.getTypeface(
+                context,
+                FontUtil.mGoudyStMRegularTypefaceString);
+        mGoudyStMItalicTypeface = FontUtil.getTypeface(
+                context,
+                FontUtil.mGoudyStMItalicTypefaceString);
     }
 
     @Override
@@ -76,6 +87,10 @@ public class SearchResultsAdapter extends ArrayAdapter<Artwork> {
         Artwork artwork = mFilteredArtworks.get(position);
         searchResultHolder.artistTextView.setText(artwork.mArtist);
         searchResultHolder.titleTextView.setText(artwork.mTitle);
+
+        searchResultHolder.artistTextView.setTypeface(mGoudyStMRegularTypeface);
+        searchResultHolder.titleTextView.setTypeface(mGoudyStMItalicTypeface);
+
         return view;
     }
 
