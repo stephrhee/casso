@@ -11,7 +11,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Artwork implements Parcelable {
@@ -79,7 +78,7 @@ public class Artwork implements Parcelable {
     @JsonIgnore
     public String getTagsAsOneString() {
         if (mTags != null) {
-            List<String> tagNames = Lists.transform(mTags, StringUtil.tagsToTagStrings);
+            List<String> tagNames = Lists.transform(mTags, StringUtil.tagsToTagDisplayableStrings);
             return Joiner.on(" ").join(tagNames);
         } else {
             return null;

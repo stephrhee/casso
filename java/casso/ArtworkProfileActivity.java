@@ -5,11 +5,12 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.text.Layout;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
+import android.text.style.AlignmentSpan;
 import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -25,6 +26,7 @@ import casso.widget.CenterLockHorizontalScrollview;
 import casso.widget.CenterLockHorizontalScrollviewAdapter;
 import casso.widget.ImageViewAndLoadingScreen;
 
+import casso.widget.RoundedBackgroundSpan;
 import com.casso.R;
 
 import com.google.common.base.Preconditions;
@@ -228,20 +230,28 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         int startIndex = 0;
         for (Tag tag : mArtwork.mTags) {
             String tagName = tag.mName;
+            String shortenedTagName = StringUtil.shorten(tagName);
             String encodedTagName = StringUtil.getEncodedFirebasePath(tagName);
             ClickableSpan clickableSpan = getClickableSpan(encodedTagName, suggestedArtworksHashMap);
             spannableString.setSpan(
                     clickableSpan,
                     startIndex,
-                    startIndex + tagName.length(),
+                    startIndex + shortenedTagName.length() + 4,
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            ForegroundColorSpan foregroundColorSpan = getForegroundColorSpan(encodedTagName, suggestedArtworksHashMap);
+            RoundedBackgroundSpan roundedBackgroundSpan = getRoundedBackgroundSpan(
+                    encodedTagName,
+                    suggestedArtworksHashMap);
             spannableString.setSpan(
-                    foregroundColorSpan,
+                    roundedBackgroundSpan,
                     startIndex,
-                    startIndex + tagName.length(),
+                    startIndex + shortenedTagName.length() + 4,
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            startIndex += tagName.length() + 1;
+            spannableString.setSpan(
+                    new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
+                    startIndex,
+                    startIndex + shortenedTagName.length() + 4,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            startIndex += shortenedTagName.length() + 5;
         }
         return spannableString;
     }
@@ -299,7 +309,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         mSuggestedArtworksScrollview.setAdapter(mSuggestedArtworksAdapter);
     }
 
-    private ForegroundColorSpan getForegroundColorSpan(
+    private RoundedBackgroundSpan getRoundedBackgroundSpan(
             String encodedTagName,
             HashMap<String, SimpleTag> suggestedArtworksHashMap) {
         if (encodedTagName != null && suggestedArtworksHashMap != null
@@ -309,13 +319,13 @@ public class ArtworkProfileActivity extends FragmentActivity implements
                     suggestedArtworksHashMap.get(encodedTagName).suggestedArtworks;
             int suggestedArtworksCount = suggestedArtworks.size();
             if (suggestedArtworksCount < 3) {
-                return new ForegroundColorSpan(getResources().getColor(R.color.red_500));
+                return new RoundedBackgroundSpan(this, R.color.indigo_50, R.color.grey_800);
             } else if (suggestedArtworksCount < 25) {
-                return new ForegroundColorSpan(getResources().getColor(R.color.amber_500));
+                return new RoundedBackgroundSpan(this, R.color.indigo_100, R.color.grey_800);
             } else if (suggestedArtworksCount < 50) {
-                return new ForegroundColorSpan(getResources().getColor(R.color.green_500));
+                return new RoundedBackgroundSpan(this, R.color.indigo_200, R.color.grey_800);
             } else {
-                return new ForegroundColorSpan(getResources().getColor(R.color.blue_500));
+                return new RoundedBackgroundSpan(this, R.color.indigo_300, R.color.grey_800);
             }
         } else {
             return null;

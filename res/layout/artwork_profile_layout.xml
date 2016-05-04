@@ -87,8 +87,8 @@
                     android:id="@+id/artwork_profile_tags_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/artwork_profile_tags_string"
-                    android:textSize="@dimen/artwork_profile_small_font_size"
+                    android:text="@string/artwork_profile_discover_topics_string"
+                    android:textSize="@dimen/artwork_profile_large_font_size"
                     style="@style/MuseumLabelTypefaceStyle" />
 
             <TextView
@@ -96,7 +96,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/search_box_edit_text_padding"
-                    android:textSize="@dimen/artwork_profile_small_font_size"
+                    android:textSize="@dimen/artwork_profile_medium_font_size"
+                    android:lineSpacingExtra="@dimen/artwork_profile_topics_top_bottom_spacing"
+                    android:gravity="center"
                     style="@style/MuseumLabelTypefaceStyle" />
 
         </LinearLayout>

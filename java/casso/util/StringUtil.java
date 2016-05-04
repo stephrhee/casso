@@ -40,9 +40,19 @@ public class StringUtil {
         return string.split(" \\(")[0];
     }
 
-    public static Function<Tag, String> tagsToTagStrings = new Function<Tag, String>() {
+    /**
+     * The max length is arbitrarily set to 21 as there are 21 characters in "architectural subject"
+     */
+    public static String shorten(String string) {
+        if (string.length() > 21) {
+            string = string.substring(0, 21) + "...";
+        }
+        return string;
+    }
+
+    public static Function<Tag, String> tagsToTagDisplayableStrings = new Function<Tag, String>() {
         public String apply(Tag tag) {
-            return tag.mName;
+            return "\u00A0\u00A0" + shorten(tag.mName) + "\u00A0\u00A0";
         }
     };
 
