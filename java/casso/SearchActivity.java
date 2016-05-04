@@ -1,6 +1,7 @@
 package casso;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
@@ -14,6 +15,7 @@ import android.widget.*;
 import casso.http.OnStartFetchHandler;
 import casso.model.Artwork;
 
+import casso.util.FontUtil;
 import com.casso.R;
 import com.google.common.base.Preconditions;
 
@@ -28,6 +30,8 @@ public class SearchActivity extends FragmentActivity {
     private EditText mArtistSearchField;
     private EditText mTitleSearchField;
     private ListView mSearchResultsListView;
+
+    private Typeface mGoudyStMRegularTypeface;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,10 @@ public class SearchActivity extends FragmentActivity {
                         initViews();
                     }
                 });
+
+        mGoudyStMRegularTypeface = FontUtil.getTypeface(
+                this,
+                FontUtil.mGoudyStMRegularTypefaceString);
     }
 
     private void initSearchResults() {
@@ -66,6 +74,8 @@ public class SearchActivity extends FragmentActivity {
         mTitleSearchField = (EditText) findViewById(R.id.search_title_search_field);
         mArtistSearchField.setHint(R.string.search_artist_question_string);
         mTitleSearchField.setHint(R.string.search_title_question_string);
+        mArtistSearchField.setTypeface(mGoudyStMRegularTypeface);
+        mTitleSearchField.setTypeface(mGoudyStMRegularTypeface);
 
         mSearchResultsListView = (ListView) findViewById(R.id.search_results_list_view);
         showOrHideSearchResultsBasedOnEditText();

@@ -4,7 +4,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/white"
+        android:background="@color/grey_50"
         android:paddingLeft="@dimen/search_activity_left_right_padding"
         android:paddingRight="@dimen/search_activity_left_right_padding"
         android:paddingTop="@dimen/search_suggestions_row_view_top_bottom_padding"

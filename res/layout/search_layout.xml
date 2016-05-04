@@ -5,8 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="top|center_horizontal"
-        android:background="@color/white"
-        >
+        android:background="@color/blue_grey_100">
 
     <include
             android:id="@+id/search_artist_search_field"
@@ -18,9 +17,7 @@
     <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginLeft="@dimen/search_activity_left_right_padding"
-            android:layout_marginRight="@dimen/search_activity_left_right_padding"
-            android:background="@color/gray"
+            android:background="@color/blue_grey_100"
             />
 
     <include
@@ -34,7 +31,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:background="@color/blue"
             >
 
         <TextView
@@ -44,11 +40,10 @@
                 android:paddingRight="@dimen/search_activity_left_right_padding"
                 android:paddingTop="@dimen/search_suggestions_top_bottom_padding"
                 android:paddingBottom="@dimen/search_suggestions_top_bottom_padding"
+                android:background="@color/grey_300"
                 android:text="@string/search_suggestions_string"
                 android:textSize="@dimen/search_suggestions_font_size"
-                android:textColor="@color/dark_gray"
-                android:background="@color/light_gray"
-                />
+                style="@style/MuseumLabelTypefaceStyle"/>
 
         <ListView
                 android:id="@+id/search_results_list_view"
