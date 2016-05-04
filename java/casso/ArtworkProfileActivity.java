@@ -47,6 +47,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
     private TextView mCategory;
     private TextView mGenre;
     private TextView mMaterials;
+    private TextView mCuratorialComment;
     private TextView mTagsLabel;
     private TextView mTags;
     private CenterLockHorizontalScrollview mSuggestedArtworksScrollview;
@@ -85,6 +86,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         mCategory = (TextView) findViewById(R.id.artwork_profile_category);
         mGenre = (TextView) findViewById(R.id.artwork_profile_genre);
         mMaterials = (TextView) findViewById(R.id.artwork_profile_materials);
+        mCuratorialComment = (TextView) findViewById(R.id.artwork_profile_curatorial_comment);
         mTagsLabel = (TextView) findViewById(R.id.artwork_profile_tags_label);
         mTags = (TextView) findViewById(R.id.artwork_profile_tags);
         mSuggestedArtworksScrollview = (CenterLockHorizontalScrollview) findViewById(R.id.suggested_artworks_scrollview);
@@ -156,6 +158,16 @@ public class ArtworkProfileActivity extends FragmentActivity implements
             mMaterials.setVisibility(View.GONE);
         }
 
+        if (mArtwork.mCuratorialComment!= null) {
+            String string = mArtwork.mCuratorialComment;
+            if (mArtwork.mCurator != null) {
+                string += "\n-- " + mArtwork.mCurator;
+            }
+            mCuratorialComment.setText(string);
+        } else {
+            mCuratorialComment.setVisibility(View.GONE);
+        }
+
         if (mArtwork.mTags != null) {
             mTags.setText(getSpannableStringOfTags());
             mTags.setMovementMethod(LinkMovementMethod.getInstance());
@@ -174,6 +186,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         mCategory.setTypeface(mGoudyStMRegularTypeface);
         mGenre.setTypeface(mGoudyStMRegularTypeface);
         mMaterials.setTypeface(mGoudyStMRegularTypeface);
+        mCuratorialComment.setTypeface(mGoudyStMRegularTypeface);
         mTagsLabel.setTypeface(mGoudyStMRegularTypeface);
         mTags.setTypeface(mGoudyStMRegularTypeface);
     }

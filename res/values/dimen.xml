@@ -14,13 +14,13 @@
     <dimen name="search_suggestions_row_view_font_size">@dimen/search_field_font_size</dimen>
     <dimen name="search_suggestions_row_view_top_bottom_padding">@dimen/search_field_top_bottom_padding</dimen>
 
-    <dimen name="search_box_edit_text_padding">10dp</dimen>
+    <dimen name="search_box_edit_text_padding">15dp</dimen>
 
     <dimen name="artwork_profile_outer_box_margin">7dp</dimen>
     <dimen name="artwork_profile_outer_box_padding">20dp</dimen>
 
-    <dimen name="artwork_profile_large_font_size">20dp</dimen>
-    <dimen name="artwork_profile_small_font_size">15dp</dimen>
+    <dimen name="artwork_profile_large_font_size">20sp</dimen>
+    <dimen name="artwork_profile_small_font_size">15sp</dimen>
 
     <dimen name="artwork_profile_circular_progress_view_size">50dp</dimen>
 

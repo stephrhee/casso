@@ -34,7 +34,6 @@
                     android:id="@+id/artwork_profile_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/search_box_edit_text_padding"
                     android:textSize="@dimen/artwork_profile_large_font_size"
                     style="@style/MuseumLabelTypefaceStyle" />
 
@@ -65,6 +64,14 @@
                     android:id="@+id/artwork_profile_materials"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textSize="@dimen/artwork_profile_small_font_size"
+                    style="@style/MuseumLabelTypefaceStyle" />
+
+            <TextView
+                    android:id="@+id/artwork_profile_curatorial_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/search_box_edit_text_padding"
                     android:textSize="@dimen/artwork_profile_small_font_size"
                     style="@style/MuseumLabelTypefaceStyle" />
 
