@@ -84,4 +84,19 @@ public class StringUtil {
         return splitWords;
     }
 
+    public static String joinListIntoString(List<String> list, String delimiter) {
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+        String string = list.get(0);
+        if (list.size() > 1) {
+            for (int i = 1; i < list.size(); i++) {
+                if (list.get(i) != null && !list.get(i).equals("")) {
+                    string += delimiter + list.get(i);
+                }
+            }
+        }
+        return string;
+    }
+
 }

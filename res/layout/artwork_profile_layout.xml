@@ -27,7 +27,7 @@
                     android:id="@+id/artwork_profile_artist"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/artwork_profile_artist_font_size"
+                    android:textSize="@dimen/artwork_profile_large_font_size"
                     style="@style/MuseumLabelTypefaceStyle" />
 
             <TextView
@@ -35,7 +35,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/search_box_edit_text_padding"
-                    android:textSize="@dimen/artwork_profile_artwork_font_size"
+                    android:textSize="@dimen/artwork_profile_large_font_size"
                     style="@style/MuseumLabelTypefaceStyle" />
 
             <TextView
@@ -43,7 +43,29 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/search_box_edit_text_padding"
-                    android:textSize="@dimen/artwork_profile_year_font_size"
+                    android:textSize="@dimen/artwork_profile_small_font_size"
+                    style="@style/MuseumLabelTypefaceStyle" />
+
+            <TextView
+                    android:id="@+id/artwork_profile_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/search_box_edit_text_padding"
+                    android:textSize="@dimen/artwork_profile_small_font_size"
+                    style="@style/MuseumLabelTypefaceStyle" />
+
+            <TextView
+                    android:id="@+id/artwork_profile_genre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/artwork_profile_small_font_size"
+                    style="@style/MuseumLabelTypefaceStyle" />
+
+            <TextView
+                    android:id="@+id/artwork_profile_materials"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/artwork_profile_small_font_size"
                     style="@style/MuseumLabelTypefaceStyle" />
 
         </LinearLayout>
@@ -59,7 +81,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/artwork_profile_tags_string"
-                    android:textSize="@dimen/artwork_profile_tags_font_size"
+                    android:textSize="@dimen/artwork_profile_small_font_size"
                     style="@style/MuseumLabelTypefaceStyle" />
 
             <TextView
@@ -67,7 +89,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/search_box_edit_text_padding"
-                    android:textSize="@dimen/artwork_profile_tags_font_size"
+                    android:textSize="@dimen/artwork_profile_small_font_size"
                     style="@style/MuseumLabelTypefaceStyle" />
 
         </LinearLayout>

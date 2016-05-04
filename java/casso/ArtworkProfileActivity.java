@@ -44,6 +44,9 @@ public class ArtworkProfileActivity extends FragmentActivity implements
     private TextView mTitle;
     private TextView mArtist;
     private TextView mYear;
+    private TextView mCategory;
+    private TextView mGenre;
+    private TextView mMaterials;
     private TextView mTagsLabel;
     private TextView mTags;
     private CenterLockHorizontalScrollview mSuggestedArtworksScrollview;
@@ -79,6 +82,9 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         mTitle = (TextView) findViewById(R.id.artwork_profile_title);
         mArtist = (TextView) findViewById(R.id.artwork_profile_artist);
         mYear = (TextView) findViewById(R.id.artwork_profile_year);
+        mCategory = (TextView) findViewById(R.id.artwork_profile_category);
+        mGenre = (TextView) findViewById(R.id.artwork_profile_genre);
+        mMaterials = (TextView) findViewById(R.id.artwork_profile_materials);
         mTagsLabel = (TextView) findViewById(R.id.artwork_profile_tags_label);
         mTags = (TextView) findViewById(R.id.artwork_profile_tags);
         mSuggestedArtworksScrollview = (CenterLockHorizontalScrollview) findViewById(R.id.suggested_artworks_scrollview);
@@ -102,7 +108,54 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         downloadImageAsyncTask.execute(mArtwork.mHighResImageUrl);
         mTitle.setText(mArtwork.mTitle);
         mArtist.setText(mArtwork.mArtist);
-        mYear.setText(mArtwork.getYearRange());
+
+        if (mArtwork.getYearRange()!= null) {
+            mYear.setText(mArtwork.getYearRange());
+        } else {
+            mYear.setVisibility(View.GONE);
+        }
+
+        if (mArtwork.mCategory!= null) {
+            String string = getString(R.string.artwork_profile_category_string) + " " +
+                    mArtwork.mCategory;
+            mCategory.setText(string);
+        } else {
+            mCategory.setVisibility(View.GONE);
+        }
+
+        List<String> classificationGenreObjectTypeList = new ArrayList<>();
+        if (mArtwork.mClassification != null) {
+            classificationGenreObjectTypeList.add(mArtwork.mClassification);
+        }
+        if (mArtwork.mGenre != null) {
+            classificationGenreObjectTypeList.add(mArtwork.mGenre);
+        }
+        if (mArtwork.mObjectTypes != null && mArtwork.mObjectTypes.size() > 0) {
+            classificationGenreObjectTypeList.addAll(mArtwork.mObjectTypes);
+        }
+        String classificationGenreObjectTypeString =
+                StringUtil.joinListIntoString(classificationGenreObjectTypeList, ", ");
+        if (classificationGenreObjectTypeString != null) {
+            String string = getString(R.string.artwork_profile_genre_string) + " " +
+                    classificationGenreObjectTypeString;
+            mGenre.setText(string);
+        } else {
+            mGenre.setVisibility(View.GONE);
+        }
+
+        List<String> materialsList = new ArrayList<>();
+        if (mArtwork.mMaterials != null && mArtwork.mMaterials.size() > 0) {
+            materialsList.addAll(mArtwork.mMaterials);
+        }
+        String materialsString = StringUtil.joinListIntoString(materialsList, ", ");
+        if (materialsString!= null) {
+            String string = getString(R.string.artwork_profile_materials_string) + " " +
+                    materialsString;
+            mMaterials.setText(string);
+        } else {
+            mMaterials.setVisibility(View.GONE);
+        }
+
         if (mArtwork.mTags != null) {
             mTags.setText(getSpannableStringOfTags());
             mTags.setMovementMethod(LinkMovementMethod.getInstance());
@@ -110,6 +163,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
             mTags.setVisibility(View.GONE);
             mSuggestedArtworksScrollview.setVisibility(View.GONE);
         }
+
         mSuggestedArtworksScrollview.setVisibility(View.GONE);
     }
 
@@ -117,6 +171,9 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         mArtist.setTypeface(mGoudyStMRegularTypeface);
         mTitle.setTypeface(mGoudyStMItalicTypeface);
         mYear.setTypeface(mGoudyStMRegularTypeface);
+        mCategory.setTypeface(mGoudyStMRegularTypeface);
+        mGenre.setTypeface(mGoudyStMRegularTypeface);
+        mMaterials.setTypeface(mGoudyStMRegularTypeface);
         mTagsLabel.setTypeface(mGoudyStMRegularTypeface);
         mTags.setTypeface(mGoudyStMRegularTypeface);
     }

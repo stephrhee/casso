@@ -9,6 +9,9 @@
     <string name="search_title_question_string">What is the title?</string>
     <string name="search_suggestions_string">Suggestions</string>
 
+    <string name="artwork_profile_category_string">Category:</string>
+    <string name="artwork_profile_genre_string">Genre:</string>
+    <string name="artwork_profile_materials_string">Material:</string>
     <string name="artwork_profile_tags_string">Tags</string>
 
 </resources>
