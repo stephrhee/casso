@@ -3,5 +3,4 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="@dimen/suggested_artworks_dim"
         android:layout_height="@dimen/suggested_artworks_dim"
-        android:background="@color/blue_grey_50"
         android:layout_margin="1dp" />
