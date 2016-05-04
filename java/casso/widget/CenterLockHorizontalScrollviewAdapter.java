@@ -3,12 +3,12 @@ package casso.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
+import com.casso.R;
 
 import java.util.List;
 
@@ -18,6 +18,8 @@ public class CenterLockHorizontalScrollviewAdapter extends ArrayAdapter<Bitmap> 
     private final int mRowViewResourceId;
     private List<Bitmap> mBitmaps;
 
+    private int mMarginDim;
+
     public CenterLockHorizontalScrollviewAdapter(
             Context context,
             int rowViewResourceId,
@@ -26,6 +28,9 @@ public class CenterLockHorizontalScrollviewAdapter extends ArrayAdapter<Bitmap> 
         mContext = context;
         mRowViewResourceId = rowViewResourceId;
         mBitmaps = bitmaps;
+
+        mMarginDim = mContext.getResources()
+                .getDimensionPixelSize(R.dimen.artwork_profile_outer_box_margin);
     }
 
     public void updateBitmaps(List<Bitmap> bitmaps) {
@@ -53,6 +58,16 @@ public class CenterLockHorizontalScrollviewAdapter extends ArrayAdapter<Bitmap> 
             view = (ImageViewAndLoadingScreen) inflater.inflate(mRowViewResourceId, parent, false);
             holder = new Holder();
             holder.view = view;
+
+            LinearLayout.LayoutParams layoutParams =
+                    (LinearLayout.LayoutParams) holder.view.getLayoutParams();
+            if (position == mBitmaps.size() - 1) {
+                layoutParams.setMargins(0, 0, 0, 0);
+            } else {
+                layoutParams.setMargins(0, 0, mMarginDim, 0);
+            }
+            holder.view.setLayoutParams(layoutParams);
+
             view.setTag(holder);
         } else {
             holder = (Holder) view.getTag();

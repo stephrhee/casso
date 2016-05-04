@@ -2,5 +2,4 @@
 <casso.widget.ImageViewAndLoadingScreen
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="@dimen/suggested_artworks_dim"
-        android:layout_height="@dimen/suggested_artworks_dim"
-        android:layout_margin="1dp" />
+        android:layout_height="@dimen/suggested_artworks_dim" />
