@@ -1,5 +1,6 @@
 package casso;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -36,7 +37,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ArtworkProfileActivity extends FragmentActivity implements
-        DownloadImageAsyncTask.Callback {
+        DownloadImageAsyncTask.Callback,
+        CenterLockHorizontalScrollviewAdapter.OnItemClickListener {
 
     public static final String ARTWORK_KEY = "ARTWORK_KEY";
 
@@ -94,6 +96,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         mSuggestedArtworksScrollview = (CenterLockHorizontalScrollview) findViewById(R.id.suggested_artworks_scrollview);
 
         mSuggestedArtworksAdapter = new CenterLockHorizontalScrollviewAdapter(
+                this,
                 this,
                 R.layout.suggested_artwork_view,
                 mSuggestedArtworksBitmaps);
@@ -340,6 +343,28 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         mSuggestedArtworksBitmaps = dummySuggestedArtworksBitmaps;
         updateSuggestedArtworks();
         mSuggestedArtworksScrollview.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onItemClicked(int position) {
+        HashMap<String, SimpleTag> suggestedArtworksHashMap =
+                ((OnStartFetchHandler) this.getApplication()).getSuggestedArtworkHashMap();
+        List<SimpleTag.SimpleArtwork> suggestedArtworks =
+                suggestedArtworksHashMap.get(mLastClickedEncodedTagName).suggestedArtworks;
+        int id = suggestedArtworks.get(position).id;
+
+        HashMap<Integer, Artwork> artworks =
+                ((OnStartFetchHandler) this.getApplication()).getArtworks();
+        Artwork artwork = artworks.get(id);
+        launchNewArtworkProfile(artwork);
+    }
+
+    private void launchNewArtworkProfile(Artwork artwork) {
+        Bundle extras = new Bundle();
+        extras.putParcelable(ArtworkProfileActivity.ARTWORK_KEY, artwork);
+        Intent intent = new Intent(this, ArtworkProfileActivity.class);
+        intent.putExtras(extras);
+        startActivity(intent);
     }
 
 }

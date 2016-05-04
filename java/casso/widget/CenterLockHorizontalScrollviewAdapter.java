@@ -15,6 +15,7 @@ import java.util.List;
 public class CenterLockHorizontalScrollviewAdapter extends ArrayAdapter<Bitmap> {
 
     private final Context mContext;
+    private final OnItemClickListener mOnItemClickListener;
     private final int mRowViewResourceId;
     private List<Bitmap> mBitmaps;
 
@@ -22,10 +23,12 @@ public class CenterLockHorizontalScrollviewAdapter extends ArrayAdapter<Bitmap> 
 
     public CenterLockHorizontalScrollviewAdapter(
             Context context,
+            OnItemClickListener onItemClickListener,
             int rowViewResourceId,
             List<Bitmap> bitmaps) {
         super(context, rowViewResourceId, bitmaps);
         mContext = context;
+        mOnItemClickListener = onItemClickListener;
         mRowViewResourceId = rowViewResourceId;
         mBitmaps = bitmaps;
 
@@ -49,7 +52,7 @@ public class CenterLockHorizontalScrollviewAdapter extends ArrayAdapter<Bitmap> 
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ImageViewAndLoadingScreen view = (ImageViewAndLoadingScreen) convertView;
         Holder holder;
 
@@ -68,6 +71,13 @@ public class CenterLockHorizontalScrollviewAdapter extends ArrayAdapter<Bitmap> 
             }
             holder.view.setLayoutParams(layoutParams);
 
+            holder.view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnItemClickListener.onItemClicked(position);
+                }
+            });
+
             view.setTag(holder);
         } else {
             holder = (Holder) view.getTag();
@@ -85,6 +95,10 @@ public class CenterLockHorizontalScrollviewAdapter extends ArrayAdapter<Bitmap> 
 
     private class Holder {
         public ImageViewAndLoadingScreen view;
+    }
+
+    public interface OnItemClickListener {
+        public void onItemClicked(int position);
     }
 
 }
