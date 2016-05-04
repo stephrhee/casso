@@ -12,6 +12,6 @@
     <string name="artwork_profile_category_string">Category:</string>
     <string name="artwork_profile_genre_string">Genre:</string>
     <string name="artwork_profile_materials_string">Material:</string>
-    <string name="artwork_profile_discover_topics_string">Discover Topics</string>
+    <string name="artwork_profile_discover_tags_string">Discover Tags</string>
 
 </resources>

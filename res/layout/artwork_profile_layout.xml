@@ -87,7 +87,7 @@
                     android:id="@+id/artwork_profile_tags_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/artwork_profile_discover_topics_string"
+                    android:text="@string/artwork_profile_discover_tags_string"
                     android:textSize="@dimen/artwork_profile_large_font_size"
                     style="@style/MuseumLabelTypefaceStyle" />
 
