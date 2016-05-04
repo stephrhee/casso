@@ -5,4 +5,12 @@
         <item name="android:textColor">@color/grey_800</item>
     </style>
 
+    <style name="MuseumLabelBoxLinearLayoutStyle">
+        <item name="android:background">@color/grey_50</item>
+        <item name="android:layout_marginLeft">@dimen/artwork_profile_outer_box_margin</item>
+        <item name="android:layout_marginRight">@dimen/artwork_profile_outer_box_margin</item>
+        <item name="android:layout_marginBottom">@dimen/artwork_profile_outer_box_margin</item>
+        <item name="android:padding">@dimen/artwork_profile_outer_box_padding</item>
+    </style>
+
 </resources>
