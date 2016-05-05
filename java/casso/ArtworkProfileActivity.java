@@ -342,13 +342,13 @@ public class ArtworkProfileActivity extends FragmentActivity implements
                     suggestedArtworksHashMap.get(encodedTagName).suggestedArtworks;
             int suggestedArtworksCount = suggestedArtworks.size();
             if (suggestedArtworksCount < 3) {
-                return new RoundedBackgroundSpan(this, R.color.indigo_50, R.color.grey_800);
+                return new RoundedBackgroundSpan(this, R.color.pale_yellow_tag_color, R.color.grey_800);
             } else if (suggestedArtworksCount < 25) {
-                return new RoundedBackgroundSpan(this, R.color.indigo_100, R.color.grey_800);
+                return new RoundedBackgroundSpan(this, R.color.pale_orange_tag_color, R.color.grey_800);
             } else if (suggestedArtworksCount < 50) {
-                return new RoundedBackgroundSpan(this, R.color.indigo_200, R.color.grey_800);
+                return new RoundedBackgroundSpan(this, R.color.medium_orange_tag_color, R.color.grey_800);
             } else {
-                return new RoundedBackgroundSpan(this, R.color.indigo_300, R.color.grey_800);
+                return new RoundedBackgroundSpan(this, R.color.dark_orange_tag_color, R.color.grey_800);
             }
         } else {
             return null;
