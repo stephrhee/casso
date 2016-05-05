@@ -24,11 +24,8 @@ import casso.model.SimpleTag;
 import casso.model.Tag;
 import casso.util.FontUtil;
 import casso.util.StringUtil;
-import casso.widget.CenterLockHorizontalScrollview;
-import casso.widget.CenterLockHorizontalScrollviewAdapter;
-import casso.widget.ImageViewAndLoadingScreen;
+import casso.widget.*;
 
-import casso.widget.RoundedBackgroundSpan;
 import com.casso.R;
 
 import com.google.common.base.Preconditions;
@@ -47,6 +44,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
     private Artwork mArtwork;
 
     private ImageViewAndLoadingScreen mImageViewAndLoadingScreen;
+    private CenterLockHorizontalScrollview mColorPaletteListView;
     private TextView mTitle;
     private TextView mArtist;
     private TextView mYear;
@@ -86,6 +84,7 @@ public class ArtworkProfileActivity extends FragmentActivity implements
 
     private void init() {
         mImageViewAndLoadingScreen = (ImageViewAndLoadingScreen) findViewById(R.id.artwork_profile_image);
+        mColorPaletteListView = (CenterLockHorizontalScrollview) findViewById(R.id.color_palette_list_view);
         mTitle = (TextView) findViewById(R.id.artwork_profile_title);
         mArtist = (TextView) findViewById(R.id.artwork_profile_artist);
         mYear = (TextView) findViewById(R.id.artwork_profile_year);
@@ -213,10 +212,17 @@ public class ArtworkProfileActivity extends FragmentActivity implements
 
     @Override
     public void onColorsFetched(List<Integer> colors) {
+        ColorPaletteAdapter colorPaletteAdapter = new ColorPaletteAdapter(
+                this,
+                R.layout.color_palette_block,
+                colors,
+                mColorPaletteListView.getWidth());
+        mColorPaletteListView.setAdapter(colorPaletteAdapter);
     }
 
     @Override
     public void onRequestFailed() {
+        mColorPaletteListView.setVisibility(View.GONE);
     }
 
     private void testPrint() {

@@ -19,6 +19,8 @@
     <dimen name="artwork_profile_outer_box_margin">7dp</dimen>
     <dimen name="artwork_profile_outer_box_padding">20dp</dimen>
 
+    <dimen name="artwork_profile_color_palette_block_height">20dp</dimen>
+
     <dimen name="artwork_profile_large_font_size">20sp</dimen>
     <dimen name="artwork_profile_medium_font_size">17sp</dimen>
     <dimen name="artwork_profile_small_font_size">15sp</dimen>

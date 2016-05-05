@@ -23,10 +23,23 @@
                 android:layout_marginTop="@dimen/artwork_profile_outer_box_margin"
                 style="@style/MuseumLabelBoxLinearLayoutStyle">
 
+            <casso.widget.CenterLockHorizontalScrollview
+                    android:id="@+id/color_palette_list_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/artwork_profile_color_palette_block_height">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"/>
+
+            </casso.widget.CenterLockHorizontalScrollview>
+
             <TextView
                     android:id="@+id/artwork_profile_artist"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/search_box_edit_text_padding"
                     android:textSize="@dimen/artwork_profile_large_font_size"
                     style="@style/MuseumLabelTypefaceStyle" />
 
@@ -112,7 +125,6 @@
                 android:padding="0dp">
 
             <LinearLayout
-                    android:id="@+id/suggested_artworks_scrollview_linear_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"/>

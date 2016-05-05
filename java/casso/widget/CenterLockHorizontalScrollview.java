@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
@@ -21,7 +22,7 @@ public class CenterLockHorizontalScrollview extends HorizontalScrollView {
         setSmoothScrollingEnabled(true);
     }
 
-    public void setAdapter(CenterLockHorizontalScrollviewAdapter mAdapter) {
+    public void setAdapter(ArrayAdapter mAdapter) {
         if (getChildCount() != 0 && mAdapter != null) {
             mLinearLayout = (LinearLayout) getChildAt(0);
             mLinearLayout.removeAllViews();
