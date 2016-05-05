@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
+import casso.http.ColorTagHandler;
 import casso.http.OnStartFetchHandler;
 import casso.model.Artwork;
 import casso.model.SimpleTag;
@@ -38,7 +39,8 @@ import java.util.List;
 
 public class ArtworkProfileActivity extends FragmentActivity implements
         DownloadImageAsyncTask.Callback,
-        CenterLockHorizontalScrollviewAdapter.OnItemClickListener {
+        CenterLockHorizontalScrollviewAdapter.OnItemClickListener,
+        ColorTagHandler.Listener {
 
     public static final String ARTWORK_KEY = "ARTWORK_KEY";
 
@@ -113,6 +115,10 @@ public class ArtworkProfileActivity extends FragmentActivity implements
     private void setViews() {
         DownloadImageAsyncTask downloadImageAsyncTask = new DownloadImageAsyncTask(this);
         downloadImageAsyncTask.execute(mArtwork.mHighResImageUrl);
+
+        ColorTagHandler colorTagHandler = new ColorTagHandler(this, this, mArtwork.mLowResImageUrl);
+        colorTagHandler.execute();
+
         mTitle.setText(mArtwork.mTitle);
         mArtist.setText(mArtwork.mArtist);
 
@@ -203,6 +209,14 @@ public class ArtworkProfileActivity extends FragmentActivity implements
         } else {
             Log.e("ArtworkProfileActivity", "bitmap could not be fetched");
         }
+    }
+
+    @Override
+    public void onColorsFetched(List<Integer> colors) {
+    }
+
+    @Override
+    public void onRequestFailed() {
     }
 
     private void testPrint() {
