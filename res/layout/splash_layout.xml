@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/blue_grey_100"
+        android:gravity="center">
+
+    <ImageView
+            android:layout_width="@dimen/splash_activity_logo_dim"
+            android:layout_height="@dimen/splash_activity_logo_dim"
+            android:background="@drawable/logo"
+            android:layout_margin="@dimen/splash_activity_logo_margins"
+            android:layout_gravity="center"
+            />
+
+    <TextView
+            android:id="@+id/splash_activity_app_title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textSize="@dimen/splash_activity_app_title_text_size"
+            style="@style/MuseumLabelTypefaceStyle"
+            />
+
+</LinearLayout>
