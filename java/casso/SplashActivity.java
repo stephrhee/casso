@@ -18,7 +18,7 @@ import com.casso.R;
 
 public class SplashActivity extends FragmentActivity {
 
-    private final int SPLASH_DISPLAY_LENGTH = 2000;
+    private final int SPLASH_DISPLAY_LENGTH = 1500;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
